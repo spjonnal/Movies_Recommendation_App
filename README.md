@@ -1,3 +1,4 @@
+**Mowickie******
 Movie recommendation and conversational AI application that integrates a Node.js + React front-end with a Python FastAPI backend (RAG — Retrieval-Augmented Generation) using embeddings and an LLM (ChatOllama).
 
 **Core Components**
