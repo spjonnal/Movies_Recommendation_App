@@ -183,6 +183,7 @@ function MovieSearch(){
                 
                 <form onSubmit={sendData}>
                     <br/>
+                    <title>Mowickie 🎬</title>
                     <h1>Welcome to Mowickie... One stop destination for best movie recommendations!</h1>
                    
                     
