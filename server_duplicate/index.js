@@ -14,6 +14,7 @@ import fast_csv from "fast-csv";
 import {CloudClient} from "chromadb";
 import OPENAI from "openai";
 import axios from "axios";
+import 'dotenv/config';
 //const {spawn} = require("child_process");
 
 // const { json } = require("stream/consumers");
@@ -38,8 +39,11 @@ app.use(express.json())
 app.use(cors());
 
 const openai = new OPENAI({
-  apiKey: "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",
+  apiKey: process.env.OPENAIKEY
+  
 });
+
+
 
 const COLLECTION_NAME = "movie_recommendation_system";
 
