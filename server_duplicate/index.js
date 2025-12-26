@@ -38,10 +38,10 @@ import { type } from "os";
 app.use(express.json())
 app.use(cors());
 
-const openai = new OPENAI({
-  apiKey: process.env.OPENAIKEY
+// const openai = new OPENAI({
+//   apiKey: process.env.OPENAIKEY
   
-});
+// });
 
 
 
