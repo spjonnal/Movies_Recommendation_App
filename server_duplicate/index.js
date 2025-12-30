@@ -33,12 +33,15 @@ import {db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,d
 import { type } from "os";
 
 
-
+const PORT = process.env.PORT || 4000;
 
 app.use(express.json())
 app.use(cors());
 
-
+// const openai = new OPENAI({
+//   apiKey: process.env.OPENAIKEY
+  
+// });
 
 
 
@@ -193,7 +196,7 @@ app.post("/api/ask_llm", async (req, res) => {
   }
 });
 
-app.listen(4001, () => {
-    console.log("Server is running at http://localhost:4001");
-});
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`)
+})
 
