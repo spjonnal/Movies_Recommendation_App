@@ -5,6 +5,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 
+import psycopg2
+
+
 
 
 
@@ -121,9 +124,15 @@ FROM movie_information
     
 if __name__ == "__main__":
     # Path to your SQLite database file
-    database_file = "sqdb.db"
+    conn = psycopg2.connect(
+    host=os.environ["DB_HOST"],
+    dbname=os.environ["DB_NAME"],
+    user=os.environ["DB_USER"],
+    password=os.environ["DB_PASSWORD"],
+    port=5432
+)
     #csv_data = pd.read_csv('C:\\University_of_Waterloo\\winter 2024\\Django_Project\\Node_React_Movie_App\\movies_final_data.csv',low_memory=False)
-    conn = db_connection(database_file)
+    
     get_all_query = "SELECT genres FROM movie_information;"
     genres = execute_sql_query(conn,get_all_query)
 
