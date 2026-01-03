@@ -72,7 +72,7 @@ app.post('/api/send-genre',async (req,res)=>{
 
     const genre = req.body;//get the genre
     
-    const py_output = await executePython('count_vectorizer.py',[genre.inputText]); // send to python for execution
+    const py_output = await executePython('count_vectorizer.py',[JSON.stringify(genre.inputText)]); // send to python for execution
     const parsedOut = JSON.parse(py_output.toString()); // response
     res.json({parsedOut});
     
