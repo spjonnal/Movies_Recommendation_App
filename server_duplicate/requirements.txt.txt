@@ -1,0 +1,9 @@
+numpy
+json
+random
+googleapiclient
+pandas
+scikit-learn
+chromadb
+fastapi
+uvicorn
