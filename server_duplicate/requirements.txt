@@ -6,5 +6,5 @@ fastapi
 uvicorn
 openai
 google-api-python-client
-
+psycopg2
 
