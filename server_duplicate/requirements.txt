@@ -7,4 +7,6 @@ uvicorn
 openai
 google-api-python-client
 psycopg2
+os
+
 
