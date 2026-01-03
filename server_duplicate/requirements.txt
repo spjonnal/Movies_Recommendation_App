@@ -5,4 +5,5 @@ chromadb
 fastapi
 uvicorn
 openai
+googleapiclient
 
