@@ -168,7 +168,7 @@ function getInformation() {
 function typeHeadSearch(db, query) {
     return new Promise((resolve, reject) => {
         db.all(
-            "SELECT DISTINCT Title, Ratings, `Release Date` FROM movie_information WHERE Title LIKE ? AND Ratings >= 5 ORDER by RANDOM() LIMIT 25 ",
+            "SELECT title ratings, release_date from (SELECT DISTINCT  title, ratings, release_date FROM movie_information WHERE title LIKE ? AND ratings >= 5) ORDER BY RANDOM()  LIMIT 25  ",
             [`%${query}%`],
             (err, rows) => {
                 if (err) {
