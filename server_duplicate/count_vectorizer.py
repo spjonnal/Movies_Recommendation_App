@@ -5,7 +5,7 @@ import sys,json,random
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
-
+from datetime import date
 import psycopg2
 
 
@@ -109,7 +109,7 @@ FROM movie_information
             'Adult Rated': certificate if certificate else False,
             'IMDB ID':movie_id if movie_id else None,
             'Overview': overview if overview else "Not Available",
-            'Release Date':yr if yr else None,
+            'Release Date':yr.isoformat() if isinstance(yr,date) else None,
             'Run Time':runtime if runtime else None,
             'Title':title if title else 'Not Available',
             'Ratings': rating if rating else None,
