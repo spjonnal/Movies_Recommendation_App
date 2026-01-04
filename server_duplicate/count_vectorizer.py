@@ -77,16 +77,16 @@ def count_vectorizer_results(complete_data,user_ip,connection_string):
         h_m[i] = np.round(cosine_out[i],2)
     sql = """
 SELECT 
-    "Adult Rated",
-    "IMDB ID",
-    Overview,
-    "Release Date",
-    Runtime,
-    Title,
-    Ratings,
-    Genres,
-    "Available Languages",
-    "Cast and Crew"
+    adult_rated,
+    imdb_id,
+    overview,
+    release_date,
+    runtime,
+    title,
+    ratings,
+    genres,
+    available_languages,
+    cast_and_crew
 FROM movie_information
 """
     results = execute_sql_query(connection_string,sql)
