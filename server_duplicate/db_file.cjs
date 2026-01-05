@@ -198,7 +198,7 @@ async function typeHeadSearch_postgres(query) {
          SELECT title ratings, release_date from 
         (SELECT DISTINCT  title, ratings, release_date FROM movie_information WHERE title ILIKE $1 AND ratings >= 5)
         ORDER BY RANDOM()  LIMIT 25 
-     `
+     `,
       [`%${query}%`]
     );
     return result.rows;
