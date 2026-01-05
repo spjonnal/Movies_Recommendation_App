@@ -27,7 +27,7 @@ import 'dotenv/config';
 // const CloudClient  = require('chromaDB')
 // const OPENAI = require('openai');
 
-import {db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation,
+import {movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation,
   typeHeadSearch, specificMovie,typeHeadSearch_postgres
 } from './db_file.cjs';
 import { type } from "os";
