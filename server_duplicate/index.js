@@ -28,7 +28,7 @@ import 'dotenv/config';
 // const OPENAI = require('openai');
 
 import {db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation,
-  typeHeadSearch, specificMovie
+  typeHeadSearch, specificMovie,typeHeadSearch_postgres
 } from './db_file.cjs';
 import { type } from "os";
 
@@ -87,7 +87,8 @@ app.post('/api/typehead',async(req,res)=>{
     const {inputText} = req.body;
     const db = db_connection();
     
-    const return_data = await new typeHeadSearch(db,inputText);
+    //const return_data = await new typeHeadSearch(db,inputText);
+    const return_data = await typeHeadSearch_postgres(inputText);
     console.log("input data from db  =",return_data)
     res.json({return_data});
   }
