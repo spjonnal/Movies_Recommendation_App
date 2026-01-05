@@ -191,21 +191,18 @@ function typeHeadSearch(db, query) {
     });
 }
 
-function typeHeadSearch_postgres(query) {
-    return new Promise(async (resolve, reject) => {
-        await pg_pool.query(
-            "SELECT title ratings, release_date from (SELECT DISTINCT  title, ratings, release_date FROM movie_information WHERE title LIKE ? AND ratings >= 5) ORDER BY RANDOM()  LIMIT 25  ",
-            [`%${query}%`],
-            (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            }
-        );
-    });
+async function typeHeadSearch_postgres(query) {
+  try {
+    const result = await pg_pool.query(
+     "SELECT title ratings, release_date from (SELECT DISTINCT  title, ratings, release_date FROM movie_information WHERE title LIKE ? AND ratings >= 5) ORDER BY RANDOM()  LIMIT 25  ",
+      [`%${query}%`]
+    );
+    return result.rows;
+  } catch (err) {
+    throw err;
+  }
 }
+
 
 function getFullMovie(db,movie_name){
     return new Promise((resolve, reject) => {
