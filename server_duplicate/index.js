@@ -85,7 +85,7 @@ app.post('/api/send-genre',async (req,res)=>{
 app.post('/api/typehead',async(req,res)=>{
   try{
     const {inputText} = req.body;
-    const db = db_connection();
+    //const db = db_connection();
     
     //const return_data = await new typeHeadSearch(db,inputText);
     const return_data = await typeHeadSearch_postgres(inputText);
