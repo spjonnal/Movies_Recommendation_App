@@ -194,7 +194,11 @@ function typeHeadSearch(db, query) {
 async function typeHeadSearch_postgres(query) {
   try {
     const result = await pg_pool.query(
-     "SELECT title ratings, release_date from (SELECT DISTINCT  title, ratings, release_date FROM movie_information WHERE title LIKE ? AND ratings >= 5) ORDER BY RANDOM()  LIMIT 25  ",
+     `
+         SELECT title ratings, release_date from 
+        (SELECT DISTINCT  title, ratings, release_date FROM movie_information WHERE title ILIKE $1 AND ratings >= 5)
+        ORDER BY RANDOM()  LIMIT 25 
+     `
       [`%${query}%`]
     );
     return result.rows;
