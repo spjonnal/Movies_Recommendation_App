@@ -3,17 +3,27 @@ const fs = require("fs")
 const csv_parse = require("csv-parser")
 const { resolve } = require("path")
 const { rejects } = require("assert")
-
-function db_connection(){
-    const db = new sqdb.Database("sqdb.db",sqdb.OPEN_READWRITE,(err)=>{
-        if(err){
-            console.error(err.message)
-        }
+const {Client, Pool} = require("pg")
+// function db_connection(){
+//     const db = new sqdb.Database("sqdb.db",sqdb.OPEN_READWRITE,(err)=>{
+//         if(err){
+//             console.error(err.message)
+//         }
         
-    })
-    return db
-}
+//     })
+//     return db
+// }
 
+const pg_pool = new Pool({
+    host : process.env.DB_HOST,
+    database:process.env.DB_NAME,
+    user:process.env.DB_USER,
+    password:process.env.DB_PASSWORD,
+    port:5432,
+    ssl: {
+    rejectUnauthorized: false, // REQUIRED for Render
+  },
+});
 
 function movie_recom_table_create(db){
     console.log("came to create a table",db)
@@ -181,6 +191,22 @@ function typeHeadSearch(db, query) {
     });
 }
 
+function typeHeadSearch_postgres(query) {
+    return new Promise(async (resolve, reject) => {
+        await pg_pool.query(
+            "SELECT title ratings, release_date from (SELECT DISTINCT  title, ratings, release_date FROM movie_information WHERE title LIKE ? AND ratings >= 5) ORDER BY RANDOM()  LIMIT 25  ",
+            [`%${query}%`],
+            (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            }
+        );
+    });
+}
+
 function getFullMovie(db,movie_name){
     return new Promise((resolve, reject) => {
         db.all(
@@ -217,7 +243,7 @@ function specificMovie(db,movie_name){
 
 
 module.exports={
-    db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation, typeHeadSearch, specificMovie
+    db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation, typeHeadSearch, specificMovie,typeHeadSearch_postgres
 }
 
 // if (require.main === module) {
