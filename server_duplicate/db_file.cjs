@@ -3,16 +3,16 @@ const fs = require("fs")
 const csv_parse = require("csv-parser")
 const { resolve } = require("path")
 const { rejects } = require("assert")
-const {Client, Pool} = require("pg")
-function db_connection(){
-    const db = new sqdb.Database("sqdb.db",sqdb.OPEN_READWRITE,(err)=>{
-        if(err){
-            console.error(err.message)
-        }
+const {Pool} = require("pg")
+// function db_connection(){
+//     const db = new sqdb.Database("sqdb.db",sqdb.OPEN_READWRITE,(err)=>{
+//         if(err){
+//             console.error(err.message)
+//         }
         
-    })
-    return db
-}
+//     })
+//     return db
+// }
 
 const pg_pool = new Pool({
     host : process.env.DB_HOST,
@@ -244,7 +244,7 @@ function specificMovie(db,movie_name){
 
 
 module.exports={
-    db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation, typeHeadSearch, specificMovie,typeHeadSearch_postgres
+    movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation, typeHeadSearch, specificMovie,typeHeadSearch_postgres
 }
 
 // if (require.main === module) {
