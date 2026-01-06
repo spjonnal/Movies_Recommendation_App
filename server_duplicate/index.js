@@ -153,13 +153,13 @@ const getTrendingMovies = (path) => {
 
     pythonProcess.on('close', (code) => {
       if (code !== 0) {
-        reject(`Python exited with code ${code}. Error: ${error_out}`);
+        reject(new Error(`Python exited with code ${code}. Error: ${error_out}`));
       } else {
         try {
-          const parsed = JSON.parse(dataString); 
+          const parsed = JSON.parse(dataString.trim()); 
           resolve(parsed);
         } catch (err) {
-          reject(`Invalid JSON from Python: ${dataString}\nError: ${err}`);
+          reject(new Error(`Invalid JSON from Python: ${dataString}\nError: ${err}`));
         }
       }
     });
@@ -174,6 +174,10 @@ app.post('/api/send-trendy-movies', async (req, res) => {
   }
   catch(err){
     console.error("error in web scraping = ",err.error);
+    res.status(500).json({
+      error: err,
+      type: typeof err
+    });
   }
 });
 
