@@ -233,6 +233,7 @@ async function specificMovie(movie_name){
             `,
             [`${movie_name}`]
         );
+        console.log("specific movie from db response = ",specific_movie);
         return specific_movie;
     }
     catch(error){
