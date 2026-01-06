@@ -209,7 +209,7 @@ function MovieSearch(){
                                 <ul id='typeheadbackground'>
                                     {suggestions.map((value,ind)=>{
                                         return (
-                                            <li onClick={()=>handleMovieClick(value.Title)} key={ind}>{value.Title},&nbsp;&nbsp;{value.Ratings}</li>
+                                            <li onClick={()=>handleMovieClick(value.Title)} key={ind}>{value.title},&nbsp;&nbsp;{value.ratings}</li>
                                             
                                         );
                                     })}
