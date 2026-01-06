@@ -224,22 +224,20 @@ function getFullMovie(db,movie_name){
     });
 }
 
-function specificMovie(db,movie_name){
+async function specificMovie(movie_name){
     console.log("movie name in db = ",movie_name);
-    return new Promise((resolve, reject) => {
-        
-        db.all(
-            "SELECT * FROM movie_information WHERE Title = ? LIMIT 1 ",
-            [`${movie_name}`],
-            (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            }
+    try{
+        const specific_movie = await pg_pool.query(
+            `
+            "SELECT * FROM movie_information WHERE Title = $1 LIMIT 1 "
+            `,
+            [`${movie_name}`]
         );
-    });
+        return specific_movie;
+    }
+    catch(error){
+        console.log("specific movie issue = ",error.toString());
+    }
 }
 
 
