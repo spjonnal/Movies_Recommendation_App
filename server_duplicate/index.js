@@ -101,9 +101,9 @@ app.post('/api/movieinfo',async(req,res)=>{
   try{
     const movie_name = req.body;
     
-    const db = db_connection();
-    const complete_movie_info = await specificMovie(db,movie_name.selected_movie);
-    
+   // const db = db_connection();
+    //const complete_movie_info = await specificMovie(db,movie_name.selected_movie);
+    const complete_movie_info = await specificMovie(movie_name.selected_movie);
     res.json({complete_movie_info});
   }
   catch(err){
