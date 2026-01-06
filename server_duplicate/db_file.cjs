@@ -229,7 +229,7 @@ async function specificMovie(movie_name){
     try{
         const specific_movie = await pg_pool.query(
             `
-            "SELECT * FROM movie_information WHERE Title = $1 LIMIT 1 "
+            SELECT * FROM movie_information WHERE Title = $1 LIMIT 1
             `,
             [`${movie_name}`]
         );
