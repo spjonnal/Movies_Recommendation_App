@@ -87,7 +87,7 @@ function MovieSearch(){
     const handleMovieClick = async (title)=>{
         
         const selected_movie = title;
-        
+        console.log("selected movie for typehead = ",selected_movie);
         try{
             const movie_complete_info = await fetch(`${api_base}/api/movieinfo`,{
                 method :"POST",
