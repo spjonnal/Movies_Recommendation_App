@@ -1,4 +1,4 @@
-import requests, json
+import requests, json,sys
 from bs4 import BeautifulSoup as bs
 
 def return_latest_information():
@@ -72,5 +72,5 @@ if __name__ == "__main__":
     
     top_suggested_movies = return_latest_information()
     print(json.dumps(top_suggested_movies))
-    
+    sys.stdout.flush()
 
