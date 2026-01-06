@@ -223,6 +223,22 @@ function getFullMovie(db,movie_name){
         );
     });
 }
+function mapMovieRow(row) {
+  return {
+    "Adult Rated": row.adult_rated,
+    "IMDB ID": row.imdb_id,
+    "Overview": row.overview,
+    "Release Date": row.release_date
+      ? row.release_date.toISOString().split("T")[0]
+      : null,
+    "Runtime": row.runtime,
+    "Title": row.title,
+    "Ratings": row.ratings,
+    "Genres": row.genres,
+    "Available Languages": row.available_languages,
+    "Cast & Crew": row.cast_and_crew,
+  };
+}
 
 async function specificMovie(movie_name){
     console.log("movie name in db = ",movie_name);
@@ -234,7 +250,7 @@ async function specificMovie(movie_name){
             [`${movie_name}`]
         );
         console.log("specific movie from db response = ",specific_movie);
-        return specific_movie;
+        return mapMovieRow(specific_movie.rows[0]);
     }
     catch(error){
         console.log("specific movie issue = ",error.toString());
