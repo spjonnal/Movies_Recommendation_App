@@ -115,7 +115,7 @@ app.post('/api/movieinfo',async(req,res)=>{
 
 const executePython = (path, args) => {
     return new Promise((resolve, reject) => {
-        const py_call = spawn("python", [path, args]);
+        const py_call = spawn("python3", [path, args]);
         let py_out = '';
         let error_output = '';
 
@@ -139,7 +139,7 @@ const executePython = (path, args) => {
 
 const getTrendingMovies = (path) => {
   return new Promise((resolve, reject) => {
-    const pythonProcess = spawn('python', [path]);
+    const pythonProcess = spawn('python3', [path]);
     let dataString = '';
     let error_out = '';
 
