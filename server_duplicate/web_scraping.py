@@ -71,6 +71,6 @@ if __name__ == "__main__":
     
     
     top_suggested_movies = return_latest_information()
-    print(top_suggested_movies)
+    print(json.dumps(top_suggested_movies))
     
 
