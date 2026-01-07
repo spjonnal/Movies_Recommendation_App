@@ -46,6 +46,7 @@ function TrendyMovies() {
         finally{
             setLoading(false);
         }
+    };
     return (
         <div>
             {
