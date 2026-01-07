@@ -26,17 +26,17 @@ function TrendyMovies() {
                 throw new Error(`Backend error ${response.status}:${err_msg}`);
             }
             const data = await response.json();
-            console.log("trendy movies = ",data,data.movie_names,data['movie_names'],data['movie_names'].length,data.movie_names.length);
-            const numMovies = data.movie_names.length;
+            console.log("trendy movies = ",data,data.movie_names,data['movie_names']);
+            // const numMovies = data.movie_names.length;
             
 
-            const structured = Array.from({ length: numMovies }, (_, i) => ({
-                movie_name: data.movie_names[i],
-                imdb_rating: data.imdb_rating[i],
-                movie_length: data.movie_length[i],
-                certificate: data.certificate[i],
-                release_time: data.release_time[i],
-            }));
+            // const structured = Array.from({ length: numMovies }, (_, i) => ({
+            //     movie_name: data.movie_names[i],
+            //     imdb_rating: data.imdb_rating[i],
+            //     movie_length: data.movie_length[i],
+            //     certificate: data.certificate[i],
+            //     release_time: data.release_time[i],
+            // }));
             
             setResp(structured);
 
@@ -65,7 +65,7 @@ function TrendyMovies() {
                     <thead>
                         <tr>
                         {Object.keys(resp[0]).map((col_name, index) => (
-                            <th key={index}>{formatColumnName(col_name)}</th>
+                            <th key={index}>{col_name}</th>
                         ))}
                         </tr>
                     </thead>
