@@ -49,13 +49,14 @@ def return_latest_information():
             movie_rating.append('N/A')
 
     # --- Final JSON ---
+
     final_top_movies_json = json.dumps({
-        'movie_names': movie_headings,
-        'images': images_sources,
-        'release_time': release_year,
-        'movie_length': runtime,
-        'imdb_rating': movie_rating,
-        'certificate': certificate
+        'Movie Name': movie_headings,
+        'Image': images_sources,
+        'Release Date': release_year,
+        'Movie Length': runtime,
+        'IMDB Rating': movie_rating,
+        'Certificate': certificate
     }, indent=4)
     
     return final_top_movies_json
