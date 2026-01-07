@@ -16,6 +16,7 @@ import OPENAI from "openai";
 import axios from "axios";
 import 'dotenv/config';
 import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
