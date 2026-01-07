@@ -26,9 +26,9 @@ function TrendyMovies() {
                 throw new Error(`Backend error ${response.status}:${err_msg}`);
             }
             const data = await response.json();
-            console.log("trendy movies = ",data);
-            
+            console.log("trendy movies = ",data,data.movie_names,data['movie_names'],data['movie_names'].length,data.movie_names.length);
             const numMovies = data.movie_names.length;
+            
 
             const structured = Array.from({ length: numMovies }, (_, i) => ({
                 movie_name: data.movie_names[i],
