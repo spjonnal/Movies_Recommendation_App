@@ -15,6 +15,7 @@ import {CloudClient} from "chromadb";
 import OPENAI from "openai";
 import axios from "axios";
 import 'dotenv/config';
+import path from "path";
 //const {spawn} = require("child_process");
 
 // const { json } = require("stream/consumers");
@@ -159,21 +160,27 @@ const getTrendingMovies = (path) => {
           const parsed = JSON.parse(dataString.trim()); 
           resolve(parsed);
         } catch (err) {
-          reject(new Error(`Invalid JSON from Python: ${dataString}\nError: ${err}`));
+          console.error("error in web scraping =", err);
+          res.status(500).json({
+            error: "Failed to fetch trending movies",
+            details: err.message
+          });
         }
       }
     });
   });
 };
 
+
 app.post('/api/send-trendy-movies', async (req, res) => {
   try {
-    const return_data_trendy = await getTrendingMovies('web_scraping.py');
+    const complete_path = path.join(__dirname,'web_scraping.py');
+    const return_data_trendy = await getTrendingMovies(complete_path);
     res.json(return_data_trendy);
     
   }
   catch(err){
-    console.error("error in web scraping = ",err.error);
+    console.error("error in web scraping = ",err.toString());
     res.status(500).json({
       error: err,
       type: typeof err
