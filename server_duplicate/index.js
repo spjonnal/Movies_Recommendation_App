@@ -15,7 +15,10 @@ import {CloudClient} from "chromadb";
 import OPENAI from "openai";
 import axios from "axios";
 import 'dotenv/config';
-import path from "path";
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 //const {spawn} = require("child_process");
 
 // const { json } = require("stream/consumers");
@@ -211,6 +214,7 @@ app.post("/api/ask_llm", async (req, res) => {
 });
 
 app.listen(PORT, () => {
+  console.log("dir name =",__dirname);
   console.log(`Example app listening on port ${PORT}`)
 })
 
