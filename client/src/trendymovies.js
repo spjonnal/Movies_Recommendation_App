@@ -21,8 +21,12 @@ function TrendyMovies() {
                     "Content-Type": "application/json"
                 }
             });
+            if(!response.ok){
+                const err_msg = await response.text();
+                throw new Error(`Backend error ${response.status}:${err_msg}`);
+            }
             const data = await response.json();
-            
+            console.log("trendy movies = ",data);
             
             const numMovies = data.movie_names.length;
 
@@ -42,8 +46,6 @@ function TrendyMovies() {
         finally{
             setLoading(false);
         }
-    };
-
     return (
         <div>
             {
