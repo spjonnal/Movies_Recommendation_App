@@ -26,7 +26,7 @@ function TrendyMovies() {
                 throw new Error(`Backend error ${response.status}:${err_msg}`);
             }
             const data = await response.json();
-            console.log("trendy movies = ",data,data.movie_names,data['movie_names']);
+            console.log("trendy movies = ",data);
             // const numMovies = data.movie_names.length;
             
 
@@ -37,8 +37,19 @@ function TrendyMovies() {
             //     certificate: data.certificate[i],
             //     release_time: data.release_time[i],
             // }));
+            const keys = Object.keys(data); // column names
+            const rowCount = data[keys[0]].length;
             
-            setResp(data);
+            const structured = Array.from({ length: rowCount }, (_, i) => {
+              const row = {};
+              keys.forEach(key => {
+                row[key] = data[key][i];
+              });
+              return row;
+            });
+
+            setResp(structured);
+            
 
         } catch (err) {
             console.error("the error in trendy movies react code = ",err.toString());
