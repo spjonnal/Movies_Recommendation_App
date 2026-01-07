@@ -38,7 +38,7 @@ function TrendyMovies() {
             //     release_time: data.release_time[i],
             // }));
             
-            setResp(structured);
+            setResp(data);
 
         } catch (err) {
             console.error("the error in trendy movies react code = ",err.toString());
