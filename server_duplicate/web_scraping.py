@@ -52,7 +52,7 @@ def return_latest_information():
 
     final_top_movies_json = json.dumps({
         'Movie Name': movie_headings,
-        'Image': images_sources,
+        # 'Image': images_sources,
         'Release Date': release_year,
         'Movie Length': runtime,
         'IMDB Rating': movie_rating,
