@@ -85,11 +85,12 @@ function TrendyMovies() {
                         <tr key={index}>
                             {Object.entries(movie).map(([key, value], idx) => (
                             <td key={idx}>
-                                {typeof value === 'string' && value.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
-                                <img src={value} alt="movie" style={{ width: '100px', height: 'auto' }} />
-                                ) : (
-                                value
-                                )}
+                                // {typeof value === 'string' && value.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
+                                // <img src={value} alt="movie" style={{ width: '100px', height: 'auto' }} />
+                                // ) : (
+                                // value
+                                // )}
+                                {value}
                             </td>
                             ))}
                         </tr>
