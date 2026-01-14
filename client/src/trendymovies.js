@@ -26,20 +26,11 @@ function TrendyMovies() {
                 throw new Error(`Backend error ${response.status}:${err_msg}`);
             }
             const data = await response.json();
-            console.log("trendy movies = ",data);// this is a dictionary {"key1":[list of values],"key2":[list of values]..}
-            // const numMovies = data.movie_names.length;
             
-
-            // const structured = Array.from({ length: numMovies }, (_, i) => ({
-            //     movie_name: data.movie_names[i],
-            //     imdb_rating: data.imdb_rating[i],
-            //     movie_length: data.movie_length[i],
-            //     certificate: data.certificate[i],
-            //     release_time: data.release_time[i],
-            // }));
+            
             const keys = Object.keys(data); // column names
             const rowCount = data[keys[0]].length;
-            
+            console.log("trendy movies and rowCount = ",data,rowCount);// this is a dictionary {"key1":[list of values],"key2":[list of values]..}
             const structured = Array.from({ length: rowCount }, (_, i) => {
               const row = {};
               keys.forEach(key => {
@@ -85,7 +76,7 @@ function TrendyMovies() {
                     <tbody>
                         {resp.map((movie, index) => (
                         <tr key={index}>
-                            {Object.entries(movie).map(([key, value], idx) => (
+                            {Object.values(movie).map((value, idx) => (
                             <td key={idx}>
                                 {value}
                             </td>
