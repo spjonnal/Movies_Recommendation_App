@@ -26,7 +26,7 @@ function TrendyMovies() {
                 throw new Error(`Backend error ${response.status}:${err_msg}`);
             }
             const data = await response.json();
-            console.log("trendy movies = ",data);
+            console.log("trendy movies = ",data);// this is a dictionary {"key1":[list of values],"key2":[list of values]..}
             // const numMovies = data.movie_names.length;
             
 
@@ -75,10 +75,12 @@ function TrendyMovies() {
                 <table className = "trendy_movies_table">
                     <thead>
                         <tr>
-                        {Object.keys(resp[0]).map((col_name, index) => (
-                            <th key={index}>{col_name}</th>
+                        {Object.keys(resp).map((col_name) => (
+                            <th key={col_name}>{col_name}</th>
                         ))}
                         </tr>
+                        
+                
                     </thead>
                     <tbody>
                         {resp.map((movie, index) => (
