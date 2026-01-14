@@ -29,7 +29,7 @@ function TrendyMovies() {
             
             
             const keys = Object.keys(data); // column names
-            const rowCount = data[keys[0]].length;
+            const rowCount = data["Movie Name"].length;
             console.log("trendy movies and rowCount = ",data,rowCount);// this is a dictionary {"key1":[list of values],"key2":[list of values]..}
             const structured = Array.from({ length: rowCount }, (_, i) => {
               const row = {};
