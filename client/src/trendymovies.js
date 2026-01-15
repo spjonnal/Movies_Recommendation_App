@@ -66,7 +66,7 @@ function TrendyMovies() {
                 <table className = "trendy_movies_table">
                     <thead>
                         <tr>
-                        {Object.keys(resp).map((col_name) => (
+                        {Object.keys(resp[0]).map((col_name) => (
                             <th key={col_name}>{col_name}</th>
                         ))}
                         </tr>
