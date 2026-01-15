@@ -48,29 +48,18 @@ def return_latest_information():
         else:
             movie_rating.append('N/A')
 
-    # --- Final JSON ---
+    
 
-    final_top_movies_json = json.dumps({
+    final_top_movies = {
         'Movie Name': movie_headings,
-        # 'Image': images_sources,
         'Release Date': release_year,
         'Movie Length': runtime,
         'IMDB Rating': movie_rating,
         'Certificate': certificate
-    }, indent=4)
+    }
     
-    return final_top_movies_json
-
-
-
-
-
-
-
-
+    return final_top_movies
 if __name__ == "__main__":
-    
-    
     top_suggested_movies = return_latest_information()
     sys.stdout.write(json.dumps(top_suggested_movies))
     sys.stdout.flush()
