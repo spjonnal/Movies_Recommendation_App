@@ -277,32 +277,19 @@ function MovieSearch(){
                         <>
                         <button type='button' id = 'cancel_movie_data' onClick={handleSetCloseMovieInfo}>X</button>
                         <table >
-                            <thead>
-                                <tr>
-                                    {Object.keys(sorting[0]).map((col_name, key) => (
-                                        <th key={key}>{col_name}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sorting.map((mov, ind) => (
-                                    
-                                        
-                                            
-                                    <tr key={ind}>
-                                        {Object.entries(mov).map(([key,val], i) => (
-                                            <td key={i}>{
-                                                key.toLowerCase().includes("url") && typeof val ==="string" && val.startsWith("http")?
-                                                ( <a href={val} target="_blank" rel="noreferrer">{val}</a>  ):(val)
-                                                }
-                                            </td>
-                                        ))}
-                                    </tr>
-                                        
-                                    
-                                ))}
-                            </tbody>
-                        </table>
+                                <tbody>
+                                    {
+                                        Object.entries(movie_info).map(([key,value],i)=>(
+                                            <tr key = {key}>
+                                                <th>{key}</th>
+                                                <td>
+                                                    {String(value)}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </table>
                         </>
                     )
                 )}
