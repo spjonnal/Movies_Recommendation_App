@@ -249,7 +249,7 @@ async function specificMovie(movie_name){
             `,
             [`${movie_name}`]
         );
-        console.log("specific movie from db response = ",specific_movie);
+        console.log("specific movie from db response = ",specific_movie.rows[0]);
         return mapMovieRow(specific_movie.rows[0]);
     }
     catch(error){
