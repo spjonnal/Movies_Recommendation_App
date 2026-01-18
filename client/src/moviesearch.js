@@ -97,7 +97,7 @@ function MovieSearch(){
                 body:JSON.stringify({selected_movie}),
             });
             const return_data = await movie_complete_info.json();
-            
+            console.log("complete movie information in react = ",return_data);
             setMovieInfo(return_data.complete_movie_info);
         }
         catch(err){
