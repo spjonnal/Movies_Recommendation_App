@@ -219,29 +219,20 @@ function MovieSearch(){
                    </div>
                     <button id = "submit_button" type='submit'>Submit</button>
                 </form>
-                {movie_info.length > 0 && (
-                    
-                        !closeDataInfo && (
-                            <>
-                            <button type='button' id = "cancel_movie_data" onClick={handleSetCloseMovieInfo}>X</button>
-                             <table >
-                                <tbody>
-                                    {
-                                        Object.entries(movie_info).map(([key,value],i)=>(
-                                            <tr key = {key}>
-                                                <th>{key}</th>
-                                                <td>
-                                                    {String(value)}
-                                                </td>
-                                            </tr>
-
-                                        ))
-                                    }
-                                    
-                                </tbody>
-                            </table>
-                            </>
-                        )
+                {movie_info && Object.keys(movie_info).length > 0 && !closeDataInfo && (
+                    <>
+                        <button type="button" id="cancel_movie_data" onClick={handleSetCloseMovieInfo}>X</button>
+                        <table>
+                            <tbody>
+                                {Object.entries(movie_info).map(([key, value]) => (
+                                    <tr key={key}>
+                                        <th>{key}</th>
+                                        <td>{String(value)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </>
                 )}
                 {
                     loading && (
