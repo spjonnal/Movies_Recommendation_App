@@ -226,21 +226,22 @@ function MovieSearch(){
                             <button type='button' id = "cancel_movie_data" onClick={handleSetCloseMovieInfo}>X</button>
                         
                             
-                            <table >
+                             <table >
                                 <thead>
                                     <tr>
-                                        {Object.keys(movie_info[0]).map((col_name, key) => (
-                                            <th key={key}>{col_name}</th>
+                                        {Object.keys(movie_info[0]).map((col_name) => (
+                                            <th key={col_name}>{col_name}</th>
                                         ))}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {movie_info.map((mov, ind) => (
                                         <tr key={ind}>
-                                            {Object.entries(mov).map(([key,val], i) => (
+                                            {Object.values(mov).map((val, i) => (
                                                 <td key={i}>{
-                                                    key.toLowerCase().includes("url") && typeof val ==="string" && val.startsWith("http")?
-                                                    ( <a href={val} target="_blank" rel="noreferrer">{val}</a>  ):(val)
+                                                    {val}
+                                                    // key.toLowerCase().includes("url") && typeof val ==="string" && val.startsWith("http")?
+                                                    // ( <a href={val} target="_blank" rel="noreferrer">{val}</a>  ):(val)
                                                     }
                                                 </td>
                                             ))}
