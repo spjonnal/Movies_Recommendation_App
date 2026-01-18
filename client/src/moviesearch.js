@@ -229,7 +229,7 @@ function MovieSearch(){
                              <table >
                                 <thead>
                                     <tr>
-                                        {Object.keys(movie_info[0]).map((col_name) => (
+                                        {Object.keys(movie_info).map((col_name) => (
                                             <th key={col_name}>{col_name}</th>
                                         ))}
                                     </tr>
