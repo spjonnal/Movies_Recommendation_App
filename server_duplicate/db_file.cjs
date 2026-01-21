@@ -281,8 +281,8 @@ async function InsertContributionMovie(movie_info){
         const status = await pg_pool.query(
             `
                 INSERT INTO movie_information (
-                                "Adult Rated", "Release Date", Runtime, Title ,
-                                Ratings, Genres, "Available Languages" , "Cast and Crew" 
+                                adult_rated, release_date, runtime, title ,
+                                ratings, genres, available_languages , cast_and_crew 
                             ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id
             ` ,
             [`${final_certificate,release_date,final_movie_duration,movie_info['movie_name'],
