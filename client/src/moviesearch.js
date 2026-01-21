@@ -155,7 +155,7 @@ function MovieSearch(){
                 },
                 body: JSON.stringify(postMovieData )
             })
-            
+            console.log("status after inserting contribution date = ",send_contribution_data);
             if(send_contribution_data.status === 200){
                 alert("Data inserted. We appreciate your contribution..");
             }
