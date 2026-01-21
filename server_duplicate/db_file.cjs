@@ -283,7 +283,7 @@ async function InsertContributionMovie(movie_info){
                 INSERT INTO movie_information (
                                 adult_rated, release_date, runtime, title ,
                                 ratings, genres, available_languages , cast_and_crew 
-                            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id
+                            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
             ` ,
             [`${final_certificate,release_date,final_movie_duration,movie_info['movie_name'],
                 ratings,movie_info['genres'],movie_info['dubbing'],movie_info['cast and crew']}`
@@ -300,7 +300,7 @@ async function InsertContributionMovie(movie_info){
         );
         return({
             success:true,
-            movieId:status.rows[0].id
+            movieId:status.rows[0]
         });
     }
     catch(err){
