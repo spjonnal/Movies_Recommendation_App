@@ -285,8 +285,8 @@ async function InsertContributionMovie(movie_info){
                                 ratings, genres, available_languages , cast_and_crew 
                             ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
             ` ,
-            [`${final_certificate,release_date,final_movie_duration,movie_info['movie_name'],
-                ratings,movie_info['genres'],movie_info['dubbing'],movie_info['cast_and_crew']}`
+            [final_certificate,release_date,final_movie_duration,movie_info['movie_name'],
+                ratings,movie_info['genres'],movie_info['dubbing'],movie_info['cast_and_crew']
             ]
             
             // (err, rows) => {
