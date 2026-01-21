@@ -257,9 +257,63 @@ async function specificMovie(movie_name){
     }
 }
 
+async function InsertContributionMovie(movie_info){
+    let certificate = movie_info['certificates'];
+    let final_certificate = false;
+    if (['U','U/A','PG','PG-13','Nota'].includes(certificate)) {
+        final_certificate = false;
+    } else if (['R','18+','A','S','NC-17'].includes(certificate)) {
+        final_certificate = true;
+    }
+    
+    let movie_duration = movie_info['movie_duration']
+    movie_duration = parseInt(movie_duration);
+    let hours = Math.floor( movie_duration / 60);
+    let minutes = movie_duration % 60;
+    const final_movie_duration = String(hours)+"h"+":"+String(minutes)+"m";
+    const release_date = movie_info['release_date'];
+    const ratings = parseFloat(movie_info['imdb_rating']);
+    console.log("some changes in parameters before entering contributed data = ",final_movie_duration,final_certificate,release_date,ratings);
+    
+    try{
+        
+        
+        const status = await pg_pool.query(
+            `
+                INSERT INTO movie_information (
+                                "Adult Rated", "Release Date", Runtime, Title ,
+                                Ratings, Genres, "Available Languages" , "Cast and Crew" 
+                            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id
+            ` ,
+            [`${final_certificate,release_date,final_movie_duration,movie_info['movie_name'],
+                ratings,movie_info['genres'],movie_info['dubbing'],movie_info['cast and crew']}`
+            ]
+            
+            // (err, rows) => {
+            //     if (err) {
+            //         reject(err);
+            //     } else {
+            //         resolve({ movieId: this.lastID });
+            //     }
+            // }
+        
+        );
+        return({
+            success:true,
+            movieId:status.rows[0].id
+        });
+    }
+    catch(err){
+        console.log("some error while inserting contributed data = ",err.toString());
+        return({
+            success:false,
+            error:err.toString()
+        });
+    }
+}
 
 module.exports={
-    movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation, typeHeadSearch, specificMovie,typeHeadSearch_postgres
+    movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation, typeHeadSearch, specificMovie,typeHeadSearch_postgres,InsertContributionMovie
 }
 
 // if (require.main === module) {
