@@ -103,6 +103,9 @@ function MovieSearch(){
         catch(err){
             console.error("some issue in retrieving the movie information in react = ",err.toString());
         }
+        finally{
+            setCloseDataInfo(false);
+        }
     }
 
 
