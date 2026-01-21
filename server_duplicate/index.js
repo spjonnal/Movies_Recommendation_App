@@ -33,7 +33,7 @@ const __dirname = dirname(__filename);
 // const OPENAI = require('openai');
 
 import {movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation,
-  typeHeadSearch, specificMovie,typeHeadSearch_postgres
+  typeHeadSearch, specificMovie,typeHeadSearch_postgres,InsertContributionMovie
 } from './db_file.cjs';
 import { type } from "os";
 
@@ -193,6 +193,24 @@ app.post('/api/send-trendy-movies', async (req, res) => {
   }
 });
 
+app.post('/api/send-contribution-data',async(req,res)=>{
+  try{
+    const contribution_data = req.body;
+    console.log("contributed data = ",contribution_data);
+    const response = await InsertContributionMovie(contribution_data);
+    return res.status(200).json({
+      success:true,
+      response
+    });
+  }
+  catch(err){
+    console.error("error in inserting contributed data",err.toString());
+    return res.status(500).json({
+      success:false,
+      error:err.toString()
+    });
+  }
+});
 
 app.post("/api/ask_llm", async (req, res) => {
   
