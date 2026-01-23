@@ -106,20 +106,20 @@ def return_latest_information():
     movies = soup.find_all('li', {'data-testid': 'list-item'}) or \
              soup.find_all('li', class_=lambda x: x and any(cls in str(x) for cls in ['ipc-list', 'metadata-list']))[:20]
     
-    print(f"✅ Found {len(movies)} movies in {time.time()-start_time:.1f}s")
     
     if not movies:
         return json.dumps({"error": "Selector mismatch - page loaded but no movies"}, indent=4)
     
     # Your extraction code (may need minor selector tweaks)...
     movie_headings = [m.find('h3').text.strip() if (h3 := m.find('h3')) else 'N/A' for m in movies]
-    
-    return json.dumps({
-        "url": imdb_url,
-        "movies_count": len(movies),
-        "sample_titles": movie_headings[:5],  # Preview
-        # ... full extraction
-    }, indent=4)
+    final_top_movies = {
+         'Movie Name': movie_headings,
+         'Release Date': release_year,
+         'Movie Length': runtime,
+         'IMDB Rating': movie_rating,
+         'Certificate': certificate
+     }
+
 if __name__ == "__main__":
     top_suggested_movies = return_latest_information()
    
