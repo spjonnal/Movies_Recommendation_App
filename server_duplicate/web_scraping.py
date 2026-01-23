@@ -9,7 +9,7 @@ def return_latest_information():
     with open("imdb_genres_page.txt") as url:
         imdb_url = url.read().strip()
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True) #headless=False requires GUI (Xvfb/dbus) – Render servers are CLI‑only.
         page = browser.new_page()
         #page.set_viewport_size({"width": 1920, "height": 1080})
         
