@@ -28,13 +28,7 @@ def return_latest_information():
         browser.close()
     
     soup = bs(html, "lxml")
-    
-    # Updated selectors for moviemeter/chart pages
-    movies = soup.find_all('li', {'data-testid': 'list-item'}) or \
-             soup.find_all('li', class_=lambda x: x and any(cls in str(x) for cls in ['ipc-list', 'metadata-list']))[:20]
-    
-    
-    
+    movies = soup.select("li.ipc-metadata-list-summary-item")
     if not movies:
         return json.dumps({"error": "Selector mismatch - page loaded but no movies"}, indent=4)
     
