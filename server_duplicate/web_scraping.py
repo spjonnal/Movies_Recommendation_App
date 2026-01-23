@@ -1,17 +1,29 @@
 import requests, json,sys
 from bs4 import BeautifulSoup as bs
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from playwright.sync_api import sync_playwright
 
 def return_latest_information():
 
     with open("imdb_genres_page.txt") as url:
         imdb_url = url.read().strip()
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
-    }
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        page = browser.new_page()
+        #page.set_viewport_size({"width": 1920, "height": 1080})
+        
+        page.goto(imdb_url)
+        page.wait_for_selector("li[class*='ipc-metadata-list-summary-item']", timeout=10000)
+        
+        # Scroll minimally
+        page.evaluate("window.scrollTo(0, 2000)")
+        page.wait_for_timeout(2000)
+        
+        html = page.content()
+        browser.close()
 
-
-    req = requests.get(imdb_url,headers=headers)
-    parsed_content = bs(req.content,"html.parser")
+    parsed_content = bs(html, "html.parser")
 
 
     movies = parsed_content.find_all('li', class_=lambda x: x and 'ipc-metadata-list-summary-item' in x)
