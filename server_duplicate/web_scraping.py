@@ -85,19 +85,18 @@ def return_latest_information():
         imdb_url = f.read().strip()
     
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, args=['--no-sandbox', '--disable-dev-shm-usage'])
-        page = browser.new_page(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-        
-        page.goto(imdb_url, wait_until="domcontentloaded")
-        
-        # Robust IMDb chart waits
-        page.wait_for_selector("h1:has-text('Most Popular'), [data-testid='chart-layout']", timeout=15000)
-        page.wait_for_selector("ul[data-testid='list'], li[data-testid]", timeout=10000)
-        
-        # Scroll minimally (first 20 movies)
-        page.evaluate("window.scrollTo(0, 3000);")
-        page.wait_for_timeout(1500)
-        
+        browser = p.chromium.launch(
+            headless=True,
+            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"]
+        )
+
+        page = browser.new_page(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        )
+
+        page.goto(imdb_url, wait_until="networkidle", timeout=30000)
+        page.wait_for_timeout(3000)
+
         html = page.content()
         browser.close()
     
