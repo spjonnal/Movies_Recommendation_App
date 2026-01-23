@@ -13,18 +13,15 @@ def return_latest_information():
         page = browser.new_page()
         #page.set_viewport_size({"width": 1920, "height": 1080})
         
-        page.goto(imdb_url)
-        page.wait_for_selector("li[class*='ipc-metadata-list-summary-item']", timeout=15000)
-        
-        # Scroll minimally
-        page.evaluate("window.scrollTo(0, 2000)")
+        page.goto(imdb_url, wait_until="domcontentloaded", timeout=15000)
         page.wait_for_timeout(5000)
-        
+
         html = page.content()
         browser.close()
 
-    parsed_content = bs(html,"html.parser")
-    movies = parsed_content.find_all('li', class_=lambda x: x and 'ipc-metadata-list-summary-item' in x)
+    soup = bs(html, "lxml")
+
+    movies = soup.select("li.ipc-metadata-list-summary-item")
     #print("movie information = ",movies)
     images_sources = []
     movie_headings = []
