@@ -208,7 +208,7 @@ app.post('/api/send-trendy-movies', async (req, res) => {
   try {
     const complete_path = path.join(__dirname,'web_scraping.py');
     const return_data_trendy = await getTrendingMovies(complete_path);
-    console.log("trending data in node = ",return _data_trendy);
+    console.log("trending data in node = ",return_data_trendy);
     res.json(return_data_trendy);
     
   }
