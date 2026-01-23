@@ -87,5 +87,5 @@ if __name__ == "__main__":
     
     
     top_suggested_movies = return_latest_information()
-    print(json.dumps(top_suggested_movies))
+    sys.stdout.write(json.dumps(top_suggested_movies))
     sys.stdout.flush()
