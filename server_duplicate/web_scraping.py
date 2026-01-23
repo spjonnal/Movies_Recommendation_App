@@ -61,6 +61,7 @@ def return_latest_information():
     return final_top_movies
 if __name__ == "__main__":
     top_suggested_movies = return_latest_information()
-    sys.stdout.write(json.dumps(top_suggested_movies))
-    sys.stdout.flush()
+    print(top_suggested_movies)
+    # sys.stdout.write(json.dumps(top_suggested_movies))
+    # sys.stdout.flush()
 
