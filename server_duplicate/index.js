@@ -142,10 +142,9 @@ const executePython = (path, args) => {
         });
     });
 };
-
 const getTrendingMovies = (path) => {
   return new Promise((resolve, reject) => {
-    const pythonProcess = spawn('python3', [path]);
+    const pythonProcess = spawn('python', [path]);
     let dataString = '';
     let error_out = '';
 
@@ -159,22 +158,50 @@ const getTrendingMovies = (path) => {
 
     pythonProcess.on('close', (code) => {
       if (code !== 0) {
-        reject(new Error(`Python exited with code ${code}. Error: ${error_out}`));
+        reject(`Python exited with code ${code}. Error: ${error_out}`);
       } else {
         try {
-          const parsed = JSON.parse(dataString.trim()); 
+          const parsed = JSON.parse(dataString); 
           resolve(parsed);
         } catch (err) {
-          console.error("error in web scraping =", err);
-          res.status(500).json({
-            error: "Failed to fetch trending movies",
-            details: err.message
-          });
+          reject(`Invalid JSON from Python: ${dataString}\nError: ${err}`);
         }
       }
     });
   });
 };
+// const getTrendingMovies = (path) => {
+//   return new Promise((resolve, reject) => {
+//     const pythonProcess = spawn('python3', [path]);
+//     let dataString = '';
+//     let error_out = '';
+
+//     pythonProcess.stdout.on('data', (data) => {
+//       dataString += data.toString();
+//     });
+
+//     pythonProcess.stderr.on('data', (err) => {
+//       error_out += err.toString();
+//     });
+
+//     pythonProcess.on('close', (code) => {
+//       if (code !== 0) {
+//         reject(new Error(`Python exited with code ${code}. Error: ${error_out}`));
+//       } else {
+//         try {
+//           const parsed = JSON.parse(dataString.trim()); 
+//           resolve(parsed);
+//         } catch (err) {
+//           console.error("error in web scraping =", err);
+//           res.status(500).json({
+//             error: "Failed to fetch trending movies",
+//             details: err.message
+//           });
+//         }
+//       }
+//     });
+//   });
+// };
 
 
 app.post('/api/send-trendy-movies', async (req, res) => {
