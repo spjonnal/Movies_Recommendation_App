@@ -21,8 +21,8 @@ def return_latest_information():
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
         )
 
-        page.goto(imdb_url, wait_until="networkidle", timeout=30000)
-        page.wait_for_timeout(90000)
+        page.goto(imdb_url, wait_until="networkidle", timeout=15000)
+        page.wait_for_timeout(5000)
 
         html = page.content()
         browser.close()
