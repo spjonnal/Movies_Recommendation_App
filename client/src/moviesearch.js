@@ -143,7 +143,7 @@ function MovieSearch(){
     };
 
     const displayGrace = async (event) => {
-        
+        event.preventDefault();
         try{
             
             
@@ -158,7 +158,7 @@ function MovieSearch(){
               
             const data = await send_contribution_data.json();
             console.log("data after insertion = ",data);
-            if(data.status === 200){
+            if(data.success){
                 alert("Data inserted. We appreciate your contribution..");
             }
         }
