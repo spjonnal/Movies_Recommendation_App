@@ -6,33 +6,26 @@ from playwright.sync_api import sync_playwright
 os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "/opt/render/project/.cache/playwright"
 
 def return_latest_information():
-    start_time = time.time()
-    
-    with open("imdb_genres_page.txt") as f:
-        imdb_url = f.read().strip()
-    
+    with open("imdb_genres_page.txt") as url:
+        imdb_url = url.read().strip()
     with sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=True,
-            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"]
-        )
-
-        page = browser.new_page(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-        )
-
-        page.goto(imdb_url, wait_until="networkidle", timeout=15000)
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        #page.set_viewport_size({"width": 1920, "height": 1080})
+        
+        page.goto(imdb_url)
+        page.wait_for_selector("li[class*='ipc-metadata-list-summary-item']", timeout=15000)
+        
+        # Scroll minimally
+        page.evaluate("window.scrollTo(0, 2000)")
         page.wait_for_timeout(5000)
-
+        
         html = page.content()
         browser.close()
-    
-    soup = bs(html, "lxml")
-    movies = soup.select("li.ipc-metadata-list-summary-item")
-    if not movies:
-        return json.dumps({"error": "Selector mismatch - page loaded but no movies"}, indent=4)
-    
-    # Your extraction code (may need minor selector tweaks)...
+
+    parsed_content = bs(html,"html.parser")
+    movies = parsed_content.find_all('li', class_=lambda x: x and 'ipc-metadata-list-summary-item' in x)
+    #print("movie information = ",movies)
     images_sources = []
     movie_headings = []
     runtime = []
@@ -76,7 +69,6 @@ def return_latest_information():
     }
     
     return final_top_movies_json
-
 if __name__ == "__main__":
     
     
