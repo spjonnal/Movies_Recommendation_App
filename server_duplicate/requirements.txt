@@ -8,6 +8,6 @@ openai
 google-api-python-client
 psycopg2
 pg
-
-
+playwright
+selenium
 
