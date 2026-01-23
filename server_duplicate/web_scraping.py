@@ -22,7 +22,7 @@ def return_latest_information():
         )
 
         page.goto(imdb_url, wait_until="networkidle", timeout=30000)
-        page.wait_for_timeout(3000)
+        page.wait_for_timeout(90000)
 
         html = page.content()
         browser.close()
