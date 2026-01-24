@@ -32,14 +32,14 @@ def return_latest_information():
         page.route("**/ads*", lambda route: route.abort())  # Block ads/trackers
         
         try:
-            page.goto(imdb_url, wait_until="domcontentloaded", timeout=40000)
+            page.goto(imdb_url, wait_until="domcontentloaded", timeout=20000)
             
             # CRITICAL: Wait for ACTUAL movie list (Render needs this)
-            page.wait_for_selector("li[class*='ipc-metadata-list-summary-item'], li[data-testid='list-item'], .ipc-list li", timeout=40000)
+            page.wait_for_selector("li[class*='ipc-metadata-list-summary-item'], li[data-testid='list-item'], .ipc-list li", timeout=20000)
             
             # Quick scroll for lazy content
             page.evaluate("window.scrollTo(0, 2500);")
-            page.wait_for_timeout(5000)
+            page.wait_for_timeout(3000)
             
             html = page.content()
         except Exception as e:
@@ -54,7 +54,7 @@ def return_latest_information():
     movies = (soup.select("li.ipc-metadata-list-summary-item") or
               soup.select("li[data-testid='list-item']") or
               soup.select("li[class*='ipc-list-item']") or
-              soup.select("div[class*='ipc-metadata-list-summary-item']"))[:20]
+              soup.select("div[class*='ipc-metadata-list-summary-item']"))
     
     #print(f"Extracted {len(movies)} movies from {imdb_url}")
     
