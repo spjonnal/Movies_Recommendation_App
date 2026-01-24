@@ -100,12 +100,12 @@ def return_latest_information():
         movie_rating.append(rating_span.text.strip() if rating_span else 'N/A')
     
     return {
-        'movie_names': movie_headings,
-        'images': images_sources,
-        'release_time': release_year,
-        'movie_length': runtime,
-        'imdb_rating': movie_rating,
-        'certificate': certificate,
+        'Movie Name': movie_headings,
+        #'images': images_sources,
+        'Release Date': release_year,
+        'Runtime': runtime,
+        'IMDB Rating': movie_rating,
+        'Certificate': certificate,
         
     }
 
