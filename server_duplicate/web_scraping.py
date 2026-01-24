@@ -32,10 +32,10 @@ def return_latest_information():
         page.route("**/ads*", lambda route: route.abort())  # Block ads/trackers
         
         try:
-            page.goto(imdb_url, wait_until="domcontentloaded", timeout=30000)
+            page.goto(imdb_url, wait_until="domcontentloaded", timeout=40000)
             
             # CRITICAL: Wait for ACTUAL movie list (Render needs this)
-            page.wait_for_selector("li[class*='ipc-metadata-list-summary-item'], li[data-testid='list-item'], .ipc-list li", timeout=30000)
+            page.wait_for_selector("li[class*='ipc-metadata-list-summary-item'], li[data-testid='list-item'], .ipc-list li", timeout=40000)
             
             # Quick scroll for lazy content
             page.evaluate("window.scrollTo(0, 2500);")
@@ -44,7 +44,7 @@ def return_latest_information():
             html = page.content()
         except Exception as e:
             html = page.content()  # Fallback: grab whatever loaded
-            print(f"Wait timeout (normal on slow Render): {e}")
+    #        print(f"Wait timeout (normal on slow Render): {e}")
         finally:
             browser.close()
     
