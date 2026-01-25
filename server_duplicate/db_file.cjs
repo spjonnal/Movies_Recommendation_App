@@ -240,14 +240,14 @@ function mapMovieRow(row) {
   };
 }
 
-async function specificMovie(movie_name){
-    console.log("movie name in db = ",movie_name);
+async function specificMovie(movie_name,ratings){
+    console.log("movie name in db = ",movie_name,ratings);
     try{
         const specific_movie = await pg_pool.query(
             `
-            SELECT * FROM movie_information WHERE Title = $1 LIMIT 1
+            SELECT * FROM movie_information WHERE Title = $1 and Ratings = $2 LIMIT 1
             `,
-            [`${movie_name}`]
+            [`${movie_name}`,`${ratings}`]
         );
         console.log("specific movie from db response = ",specific_movie.rows[0]);
         return mapMovieRow(specific_movie.rows[0]);
