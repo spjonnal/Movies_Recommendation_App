@@ -214,7 +214,7 @@ function MovieSearch(){
                                 <ul id='typeheadbackground'>
                                     {suggestions.map((value,ind)=>{
                                         return (
-                                            <li onMouseDown={(e)=> {e.preventDefault(); handleMovieClick(value.title);}} key={ind}>{value.title},&nbsp;&nbsp;{value.ratings}</li>
+                                            <li onMouseDown={(e)=> {e.preventDefault(); handleMovieClick(value);}} key={ind}>{value.title},&nbsp;&nbsp;{value.ratings}</li>
                                             // using onMouseDown event instead of onClick as we are trying to overcome the input loosing focus case
                                         );
                                     })}
