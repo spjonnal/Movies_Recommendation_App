@@ -1,5 +1,5 @@
 import numpy as np
-import pickle
+import pickle,os
 import warnings
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -12,13 +12,14 @@ from typing import List, Dict
 
 
 warnings.filterwarnings("ignore")
-
+ollama_api  = os.getenv("Ollama_RAG_API","http://localhost:11434")
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:8000", "http://127.0.0.1:8000", "*"],  # tighten in prod
     allow_methods=["*"],
     allow_headers=["*"],
+    ollama_api,
 )
 
 # ---- Load embeddings ----
@@ -27,7 +28,8 @@ with open("movie_texts.pkl", "rb") as f:
     movie_texts = pickle.load(f)
 
 encoder_model = SentenceTransformer("all-MiniLM-L6-v2")
-llm = ChatOllama(model="mistral", temperature=0)
+
+llm = ChatOllama(model="mistral", temperature=0, base_url = ollama_api)
 
 # ---- Retrieval ----
 def retrieve_top_k(query, k=3):
@@ -92,4 +94,4 @@ Question: {question}
 
 if __name__ == "__main__":
     print("in the main python")
-    uvicorn.run("RAG:app", host="0.0.0.0", port=8000,reload=True)
+    #uvicorn.run("RAG:app", host="0.0.0.0", port=8000,reload=True)
