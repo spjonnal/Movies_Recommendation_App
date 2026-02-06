@@ -16,7 +16,7 @@ ollama_api  = os.getenv("Ollama_RAG_API","http://localhost:11434")
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000", "http://127.0.0.1:*", "*"],  # tighten in prod
+    allow_origins=["http://127.0.0.1:*", "*"],  # tighten in prod
     allow_methods=["*"],
     allow_headers=["*"],
     ollama_api,
