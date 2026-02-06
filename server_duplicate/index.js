@@ -246,7 +246,7 @@ app.post("/api/ask_llm", async (req, res) => {
     const question = (req.body && req.body.question)
     
     const response = await axios.post(
-      "http://127.0.0.1:*/ask_llm",
+      "https://mowickie-rag-service.onrender.com/ask_llm",
       { question },
       { headers: { "Content-Type": "application/json" } }
     );
