@@ -1,14 +1,6 @@
-<<<<<<< HEAD
-numpy
 json
 random
 googleapiclient
-pandas
-scikit-learn
-chromadb
-fastapi
-uvicorn
-=======
 numpy==1.26.4
 pandas==2.2.2
 scikit-learn
@@ -24,4 +16,4 @@ selenium
 lxml
 
 
->>>>>>> 757289e95d8bc37a160f307d466bf78493710142
+
