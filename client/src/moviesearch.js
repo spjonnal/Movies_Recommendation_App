@@ -17,6 +17,7 @@ function MovieSearch(){
     const [loading, setLoading] = useState(false);
     const[closeGenreSelectData,setCloseGenreSelectData] = useState(false);
     const [closeDataInfo, setCloseDataInfo] = useState(false);
+    const [closeTypeHeadDataInfo, setCloseTypeHeadDataInfo] = useState(false);
     const [typeHead, setTypeHead] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const api_base = process.env.REACT_APP_API_BASE;
@@ -40,7 +41,7 @@ function MovieSearch(){
     };
 
     const handleSetCloseMovieInfo = ()=> setCloseDataInfo(!closeDataInfo);
-    
+    const handleSetCloseTypeHeadMovieInfo = ()=>setCloseTypeHeadDataInfo(!closeTypeHeadDataInfo);
 
     const handleGenreSelection = (event)=>{
         
@@ -70,15 +71,15 @@ function MovieSearch(){
         }
 
         try {
-            const response = await fetch(`${api_base}/api/typehead`, {
+            const response = await fetch(`http://localhost:4000/api/typehead`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ inputText }),
             });
 
             const data = await response.json();
-            
-            setSuggestions(data.return_data || []);
+            console.log("data for typehead in react = ",data.return_data);
+            setSuggestions(data.return_data);
         } catch (err) {
             console.error("React fetch error:", err);
         }
@@ -89,7 +90,7 @@ function MovieSearch(){
         const selected_movie = title;
         
         try{
-            const movie_complete_info = await fetch(`${api_base}/api/movieinfo`,{
+            const movie_complete_info = await fetch(`http://localhost:4000/api/movieinfo`,{
                 method :"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -103,6 +104,9 @@ function MovieSearch(){
         catch(err){
             console.error("some issue in retrieving the movie information in react = ",err.toString());
         }
+        finally{
+            setCloseDataInfo(false);
+        }
     }
 
 
@@ -114,7 +118,7 @@ function MovieSearch(){
         
             try {
                 setLoading(true);
-                const response = await fetch(`${api_base}/api/send-genre`, {
+                const response = await fetch(`http://localhost:4000/api/send-genre`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -124,7 +128,7 @@ function MovieSearch(){
                     
                 });
                 const data = await response.json();
-                
+                console.log("data for genre = ",data);
                 setResp(data.parsedOut);
                 
             } catch (error) {
@@ -132,6 +136,7 @@ function MovieSearch(){
             }
             finally{
                 setLoading(false); // for displaying a loading message
+                setCloseDataInfo(false);
             }
         }
         else{
@@ -145,7 +150,7 @@ function MovieSearch(){
             
             
         
-            const send_contribution_data = await fetch(`${api_base}/api/send-contribution-data`,{
+            const send_contribution_data = await fetch(`http://localhost:4000/api/send-contribution-data`,{
                 method:"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -209,7 +214,7 @@ function MovieSearch(){
                                 <ul id='typeheadbackground'>
                                     {suggestions.map((value,ind)=>{
                                         return (
-                                            <li onClick={()=>handleMovieClick(value.Title)} key={ind}>{value.Title},&nbsp;&nbsp;{value.Ratings}</li>
+                                            <li onMouseDown={(e)=> {e.preventDefault(); handleMovieClick(value);}} key={ind}>{value['Title']},&nbsp;&nbsp;{value['Ratings']}</li>
                                             
                                         );
                                     })}
@@ -221,9 +226,9 @@ function MovieSearch(){
                 </form>
                 {movie_info.length > 0 && (
                     
-                        !closeDataInfo && (
+                        !closeTypeHeadDataInfo && (
                             <>
-                            <button type='button' id = "cancel_movie_data" onClick={handleSetCloseMovieInfo}>X</button>
+                            <button type='button' id = "cancel_movie_data" onClick={handleSetCloseTypeHeadMovieInfo}>X</button>
                         
                             
                             <table >
