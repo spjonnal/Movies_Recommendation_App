@@ -216,8 +216,8 @@ function MovieSearch(){
                                 <ul id='typeheadbackground'>
                                     {suggestions.map((value,ind)=>{
                                         return (
-                                            <li onMouseDown={(e)=> {e.preventDefault(); handleMovieClick(value);}} key={ind}>{value['Title']},&nbsp;&nbsp;{value['Ratings']}</li>
-                                            
+                                            <li onMouseDown={(e)=> {e.preventDefault(); handleMovieClick(value);}} key={ind}>{value.title},&nbsp;&nbsp;{value.ratings}</li>
+                                            // using onMouseDown event instead of onClick as we are trying to overcome the input loosing focus case
                                         );
                                     })}
                                 </ul>
@@ -226,19 +226,15 @@ function MovieSearch(){
                    </div>
                     <button id = "submit_button" type='submit'>Submit</button>
                 </form>
-                {movie_info.length > 0 && (
-                    
-                        !closeTypeHeadDataInfo && (
-                            <>
-                            <button type='button' id = "cancel_movie_data" onClick={handleSetCloseTypeHeadMovieInfo}>X</button>
-                        
-                            
-                            <table >
-                                <thead>
-                                    <tr>
-                                        {Object.keys(movie_info[0]).map((col_name, key) => (
-                                            <th key={key}>{col_name}</th>
-                                        ))}
+                {movie_info && Object.keys(movie_info).length > 0 && !closeDataInfo && (
+                    <>
+                        <button type="button" id="cancel_movie_data" onClick={handleSetCloseMovieInfo}>X</button>
+                        <table>
+                            <tbody>
+                                {Object.entries(movie_info).map(([key, value]) => (
+                                    <tr key={key}>
+                                        <th>{key}</th>
+                                        <td>{String(value)}</td>
                                     </tr>
                                 ))}
                             </tbody>
