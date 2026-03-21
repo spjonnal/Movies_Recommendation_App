@@ -86,6 +86,8 @@ SELECT
 FROM movie_information
 """
     results = execute_sql_query(connection_string,sql)
+    if results is None:
+        return []
     #indexes = [i for i in h_m.keys()]
     output = []
     for i in h_m.keys():
