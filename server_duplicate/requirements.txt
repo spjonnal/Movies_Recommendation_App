@@ -1,4 +1,4 @@
-googleapiclient
+
 numpy==1.26.4
 pandas==2.2.2
 scikit-learn
@@ -6,7 +6,7 @@ chromadb
 fastapi
 uvicorn
 openai
-google-api-python-client
+google-genai
 psycopg2
 pg
 playwright
