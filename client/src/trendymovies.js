@@ -21,20 +21,26 @@ function TrendyMovies() {
                     "Content-Type": "application/json"
                 }
             });
+            if(!response.ok){
+                const err_msg = await response.text();
+                throw new Error(`Backend error ${response.status}:${err_msg}`);
+            }
             const data = await response.json();
             
             
-            const numMovies = data.movie_names.length;
+            const keys = Object.keys(data); // column names
+            const rowCount = data?.["Movie Name"].length || [];
+            console.log("trendy movies and rowCount = ",data,rowCount);// this is a dictionary {"key1":[list of values],"key2":[list of values]..}
+            const structured = Array.from({ length: rowCount }, (_, i) => {
+              const row = {};
+              keys.forEach(key => {
+                row[key] = data[key][i];
+              });
+              return row;
+            });
 
-            const structured = Array.from({ length: numMovies }, (_, i) => ({
-                movie_name: data.movie_names[i],
-                imdb_rating: data.imdb_rating[i],
-                movie_length: data.movie_length[i],
-                certificate: data.certificate[i],
-                release_time: data.release_time[i],
-            }));
-            
             setResp(structured);
+            
 
         } catch (err) {
             console.error("the error in trendy movies react code = ",err.toString());
@@ -43,7 +49,6 @@ function TrendyMovies() {
             setLoading(false);
         }
     };
-
     return (
         <div>
             {
@@ -61,21 +66,19 @@ function TrendyMovies() {
                 <table className = "trendy_movies_table">
                     <thead>
                         <tr>
-                        {Object.keys(resp[0]).map((col_name, index) => (
-                            <th key={index}>{formatColumnName(col_name)}</th>
+                        {Object.keys(resp[0]).map((col_name) => (
+                            <th key={col_name}>{col_name}</th>
                         ))}
                         </tr>
+                        
+                
                     </thead>
                     <tbody>
                         {resp.map((movie, index) => (
                         <tr key={index}>
-                            {Object.entries(movie).map(([key, value], idx) => (
+                            {Object.values(movie).map((value, idx) => (
                             <td key={idx}>
-                                {typeof value === 'string' && value.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? (
-                                <img src={value} alt="movie" style={{ width: '100px', height: 'auto' }} />
-                                ) : (
-                                value
-                                )}
+                                {value}
                             </td>
                             ))}
                         </tr>

@@ -21,7 +21,7 @@ client = genai.Client(api_key=api_key)
 # for mod in client.models.list():
 #     print(mod.name)
 warnings.filterwarnings("ignore")
-
+ollama_api  = os.getenv("Ollama_RAG_API","http://localhost:11434")
 app = FastAPI()
 # app.add_middleware(
 #     CORSMiddleware,

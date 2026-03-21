@@ -1,10 +1,14 @@
+import os
 import sqlite3
 import numpy as np
 import sys,json,random
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
-from googleapiclient.discovery import build # builds a service object for the google python api
+from datetime import date
+import psycopg2
+
+
 
 
 
@@ -73,16 +77,16 @@ def count_vectorizer_results(complete_data,user_ip,connection_string):
         h_m[i] = np.round(cosine_out[i],2)
     sql = """
 SELECT 
-    "Adult Rated",
-    "IMDB ID",
-    Overview,
-    "Release Date",
-    Runtime,
-    Title,
-    Ratings,
-    Genres,
-    "Available Languages",
-    "Cast and Crew"
+    adult_rated,
+    imdb_id,
+    overview,
+    release_date,
+    runtime,
+    title,
+    ratings,
+    genres,
+    available_languages,
+    cast_and_crew
 FROM movie_information
 """
     results = execute_sql_query(connection_string,sql)
@@ -107,7 +111,7 @@ FROM movie_information
             'Adult Rated': certificate if certificate else False,
             'IMDB ID':movie_id if movie_id else None,
             'Overview': overview if overview else "Not Available",
-            'Release Date':yr if yr else None,
+            'Release Date':yr.isoformat() if isinstance(yr,date) else None,
             'Run Time':runtime if runtime else None,
             'Title':title if title else 'Not Available',
             'Ratings': rating if rating else None,
@@ -123,9 +127,15 @@ FROM movie_information
     
 if __name__ == "__main__":
     # Path to your SQLite database file
-    database_file = "sqdb.db"
+    conn = psycopg2.connect(
+    host=os.environ["DB_HOST"],
+    dbname=os.environ["DB_NAME"],
+    user=os.environ["DB_USER"],
+    password=os.environ["DB_PASSWORD"],
+    port=5432
+)
     #csv_data = pd.read_csv('C:\\University_of_Waterloo\\winter 2024\\Django_Project\\Node_React_Movie_App\\movies_final_data.csv',low_memory=False)
-    conn = db_connection(database_file)
+    
     get_all_query = "SELECT genres FROM movie_information;"
     genres = execute_sql_query(conn,get_all_query)
 

@@ -88,7 +88,7 @@ function MovieSearch(){
     const handleMovieClick = async (title)=>{
         
         const selected_movie = title;
-        
+        console.log("selected movie for typehead = ",selected_movie);
         try{
             const movie_complete_info = await fetch(`http://localhost:4000/api/movieinfo`,{
                 method :"POST",
@@ -98,8 +98,8 @@ function MovieSearch(){
                 body:JSON.stringify({selected_movie}),
             });
             const return_data = await movie_complete_info.json();
-            
-            setMovieInfo(return_data.complete_movie_info);
+            console.log("complete movie information in react = ",return_data);
+            setMovieInfo(return_data);
         }
         catch(err){
             console.error("some issue in retrieving the movie information in react = ",err.toString());
@@ -145,7 +145,7 @@ function MovieSearch(){
     };
 
     const displayGrace = async (event) => {
-        
+        event.preventDefault();
         try{
             
             
@@ -157,8 +157,10 @@ function MovieSearch(){
                 },
                 body: JSON.stringify(postMovieData )
             })
-            
-            if(send_contribution_data.status === 200){
+              
+            const data = await send_contribution_data.json();
+            console.log("data after insertion = ",data);
+            if(data.success){
                 alert("Data inserted. We appreciate your contribution..");
             }
         }
@@ -238,25 +240,10 @@ function MovieSearch(){
                                             <th key={key}>{col_name}</th>
                                         ))}
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {movie_info.map((mov, ind) => (
-                                        <tr key={ind}>
-                                            {Object.entries(mov).map(([key,val], i) => (
-                                                <td key={i}>{
-                                                    key.toLowerCase().includes("url") && typeof val ==="string" && val.startsWith("http")?
-                                                    ( <a href={val} target="_blank" rel="noreferrer">{val}</a>  ):(val)
-                                                    }
-                                                </td>
-                                            ))}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                            </>
-                        )
-                        
-                    
+                                ))}
+                            </tbody>
+                        </table>
+                    </>
                 )}
                 {
                     loading && (
