@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './App.css'
-const api_base = process.env.REACT_APP_API_BASE;
+
 function Chatbotlogic(){
     const [query, setUserQuery] = useState("");
     const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +20,7 @@ function Chatbotlogic(){
         const context = [...llmresponse.slice(-200), { from: "user", text: query }];
 
         try {
-            const response_from_llm = await fetch(`{api_base}/api/ask_llm`, {
+            const response_from_llm = await fetch(`${api_base}/api/ask_llm`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ conversation: context })
