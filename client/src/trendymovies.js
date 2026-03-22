@@ -15,7 +15,7 @@ function TrendyMovies() {
         event.preventDefault();
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:4000/api/send-trendy-movies`, {
+            const response = await fetch(`{api_base}api/send-trendy-movies`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
