@@ -16,7 +16,7 @@ load_dotenv("gemini.env")  # Load Gemini API key from .env file
 api_key = os.getenv("GEMINI_API_KEY")
 
 
-model = "gemini-2.5-flash"  # or "gemini-2.0-flash" for the latest version
+model = "gemini-3.1-flash-lite-preview"  # or "gemini-2.0-flash" for the latest version
 client = genai.Client(api_key=api_key)
 # for mod in client.models.list():
 #     print(mod.name)
