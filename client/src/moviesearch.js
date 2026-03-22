@@ -5,7 +5,7 @@ import Chatbotlogic from './chatbotlogic';
 
 import './App.css'
 // import { data } from 'react-router-dom'
-const api_base = process.env.REACT_APP_API_BASE;
+
 function MovieSearch(){
       // const [movie_genre, setMovieGenre] = useState('');
     const [resp, setResp] = useState([]);
@@ -69,7 +69,7 @@ function MovieSearch(){
         }
 
         try {
-            const response = await fetch(`{api_base}/api/typehead`, {
+            const response = await fetch(`${api_base}/api/typehead`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ inputText }),
@@ -88,7 +88,7 @@ function MovieSearch(){
         const selected_movie = title;
         console.log("selected movie for typehead = ",selected_movie);
         try{
-            const movie_complete_info = await fetch(`{api_base}/api/movieinfo`,{
+            const movie_complete_info = await fetch(`${api_base}/api/movieinfo`,{
                 method :"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -116,7 +116,7 @@ function MovieSearch(){
         
             try {
                 setLoading(true);
-                const response = await fetch(`{api_base}/api/send-genre`, {
+                const response = await fetch(`${api_base}/api/send-genre`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -148,7 +148,7 @@ function MovieSearch(){
             
             
         
-            const send_contribution_data = await fetch(`{api_base}/api/send-contribution-data`,{
+            const send_contribution_data = await fetch(`${api_base}/api/send-contribution-data`,{
                 method:"POST",
                 headers:{
                     "Content-Type": "application/json"
