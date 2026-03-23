@@ -11,7 +11,7 @@ from google.genai import types
 from dotenv import load_dotenv
 
 api_key = os.getenv("GEMINI_API_KEY")
-
+port = os.getenv("PORT")
 if not api_key:
     raise ValueError("❌ GEMINI_API_KEY is not set in environment variables")
 
@@ -165,5 +165,5 @@ async def ask_llm(request: ConversationRequest):
 if __name__ == "__main__":
     print("in the main python")
     #uvicorn.run("RAG:app", host="0.0.0.0", port=8000,reload=True)
-    uvicorn.run("RAG:app", host="0.0.0.0", port=8000)
+    uvicorn.run("RAG:app", host="0.0.0.0", port=port)
 
