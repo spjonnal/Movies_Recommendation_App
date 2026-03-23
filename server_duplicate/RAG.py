@@ -26,7 +26,7 @@ warnings.filterwarnings("ignore")
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://mowickie-rag-service.onrender.com"],  # tighten in prod
+    allow_origins=["https://movies-recommendation-app-d1q2.onrender.com"],  # tighten in prod
     allow_methods=["*"],
     allow_headers=["*"],
 )
