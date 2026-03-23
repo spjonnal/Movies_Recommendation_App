@@ -6,18 +6,18 @@ function Chatbotlogic(){
     const [isOpen, setIsOpen] = useState(false);
     const api_base = process.env.REACT_APP_API_BASE;
     const [llmresponse,setLLMResponse] = useState([
-        {from:"mowickie",text:"Hi, how can I help you today?"}
+        {from_user:"mowickie",text:"Hi, how can I help you today?"}
     ]);
     const toggleChat = ()=>setIsOpen(!isOpen);
     const handleLLmInteraction = async () => {
     // Append user query locally
         setLLMResponse(prev => [
             ...prev.slice(-200),
-            { from: "user", text: query }
+            { from_user: "user", text: query }
         ]);
 
     // Prepare conversation context for the backend
-        const context = [...llmresponse.slice(-200), { from: "user", text: query }];
+        const context = [...llmresponse.slice(-200), { from_user: "user", text: query }];
 
         try {
             const response_from_llm = await fetch(`${api_base}/api/ask_llm`, {
@@ -30,12 +30,12 @@ function Chatbotlogic(){
 
             setLLMResponse(prev => [
                 ...prev.slice(-200),
-                { from: "mowickie", text: data.answer }
+                { from_user: "mowickie", text: data.answer }
             ]);
         } catch (err) {
             setLLMResponse(prev => [
                 ...prev.slice(-200),
-                { from: "mowickie", text: err.toString() }
+                { from_user: "mowickie", text: err.toString() }
             ]);
         }
 
@@ -54,7 +54,7 @@ function Chatbotlogic(){
                     
                             {
                                 llmresponse.map((msg,ind)=>(
-                                    <div  key = {ind} className = {msg.from === "mowickie"? "llm-msg" :"user-msg"}>
+                                    <div  key = {ind} className = {msg.from_user === "mowickie"? "llm-msg" :"user-msg"}>
                                         
                                         <p id = "chatbot_reply">{msg.text}</p>
                                     </div>
