@@ -26,7 +26,7 @@ warnings.filterwarnings("ignore")
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000", "http://127.0.0.1:8000", "*"],  # tighten in prod
+    allow_origins=["https://mowickie-rag-service.onrender.com","http://localhost:8000", "http://127.0.0.1:8000", "*"],  # tighten in prod
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -164,5 +164,6 @@ async def ask_llm(request: ConversationRequest):
 
 if __name__ == "__main__":
     print("in the main python")
-    uvicorn.run("RAG:app", host="0.0.0.0", port=8000,reload=True)
+    #uvicorn.run("RAG:app", host="0.0.0.0", port=8000,reload=True)
+    uvicorn.run("RAG:app", host="https://mowickie-rag-service.onrender.com", port=8000,reload=True)
 
