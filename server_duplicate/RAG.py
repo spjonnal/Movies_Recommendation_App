@@ -21,14 +21,14 @@ client = genai.Client(api_key=api_key)
 # for mod in client.models.list():
 #     print(mod.name)
 warnings.filterwarnings("ignore")
-ollama_api  = os.getenv("Ollama_RAG_API","http://localhost:11434")
+#ollama_api  = os.getenv("Ollama_RAG_API","http://localhost:11434")
 app = FastAPI()
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["http://localhost:8000", "http://127.0.0.1:8000", "*"],  # tighten in prod
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://mowickie-rag-service.onrender.com"],#"http://localhost:8000", "http://127.0.0.1:8000", "*"],  # tighten in prod
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ---- Load embeddings ----
 # embeddings = np.load("movie_embeddings.npy")
