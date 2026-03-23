@@ -11,7 +11,7 @@ from google.genai import types
 from dotenv import load_dotenv
 
 api_key = os.getenv("GEMINI_API_KEY")
-port = os.getenv("PORT")
+port = int(os.getenv("PORT"))
 if not api_key:
     raise ValueError("❌ GEMINI_API_KEY is not set in environment variables")
 
