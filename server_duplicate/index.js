@@ -247,7 +247,7 @@ app.post("/api/ask_llm", async (req, res) => {
     
     const response = await axios.post(
       //"http://localhost:8000/ask_llm",
-      "http://localhost:8000/ask_llm",
+      "http://127.0.0.1:8000/ask_llm",
       { conversation: req.body.conversation},
       { headers: { "Content-Type": "application/json" } }
     );
