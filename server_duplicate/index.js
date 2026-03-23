@@ -243,11 +243,11 @@ app.post('/api/send-contribution-data',async(req,res)=>{
 app.post("/api/ask_llm", async (req, res) => {
   
   try {
-    const question = (req.body && req.body.question)
+    //const question = (req.body && req.body.question)
     
     const response = await axios.post(
       "https://mowickie-rag-service.onrender.com",
-      { question },
+      { conversation: req.body.conversation},
       { headers: { "Content-Type": "application/json" } }
     );
 
