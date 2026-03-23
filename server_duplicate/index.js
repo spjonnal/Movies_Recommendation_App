@@ -52,7 +52,7 @@ app.use(cors());
 
 const COLLECTION_NAME = "movie_recommendation_system";
 
-
+const api_base = process.env.RAG_API_URL || "http://localhost:8000/ask_llm";
 
 app.get('/send_data_to_vectorDB', async (req, res) => {
     try {
