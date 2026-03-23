@@ -3,9 +3,6 @@ import pickle,os
 import warnings
 from fastapi import FastAPI
 from pydantic import BaseModel
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-from langchain_community.chat_models import ChatOllama
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict
