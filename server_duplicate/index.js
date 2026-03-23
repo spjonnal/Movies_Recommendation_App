@@ -246,7 +246,7 @@ app.post("/api/ask_llm", async (req, res) => {
     //const question = (req.body && req.body.question)
     
     const response = await axios.post(
-      ${api_base},
+      api_base,
       { conversation: req.body.conversation},
       { headers: { "Content-Type": "application/json" } }
     );
