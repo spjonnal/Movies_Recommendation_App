@@ -61,7 +61,14 @@ function Chatbotlogic(){
                                 ))
                             }
                         </p>
-                        <input id = "chatbot_input" placeholder = "enter your text here" value = {query} onChange = {(e)=>setUserQuery(e.target.value)} onKeyDown = {(e)=>e==="Enter" && handleLLmInteraction()}></input>
+                        <input 
+                            id = "chatbot_input" placeholder = "enter your text here" value = {query} onChange = {(e)=>setUserQuery(e.target.value)} onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                handleLLmInteraction();
+                            }
+                            }}>
+
+                        </input>
                         <button id = "submit_button" onClick = {handleLLmInteraction} >Generate response</button>
                         </>
                     )
