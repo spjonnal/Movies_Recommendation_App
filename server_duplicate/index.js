@@ -246,7 +246,7 @@ app.post("/api/ask_llm", async (req, res) => {
     //const question = (req.body && req.body.question)
     
     const response = await axios.post(
-      "https://mowickie-rag-service.onrender.com",
+      ${api_base},
       { conversation: req.body.conversation},
       { headers: { "Content-Type": "application/json" } }
     );
