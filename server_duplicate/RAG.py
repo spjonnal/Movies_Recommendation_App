@@ -9,12 +9,16 @@ from typing import List, Dict
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
-load_dotenv("gemini.env")  # Load Gemini API key from .env file
+
 api_key = os.getenv("GEMINI_API_KEY")
+
+if not api_key:
+    raise ValueError("❌ GEMINI_API_KEY is not set in environment variables")
+
+client = genai.Client(api_key=api_key)
 
 
 model = "gemini-3.1-flash-lite-preview"  # or "gemini-2.0-flash" for the latest version
-client = genai.Client(api_key=api_key)
 # for mod in client.models.list():
 #     print(mod.name)
 warnings.filterwarnings("ignore")
