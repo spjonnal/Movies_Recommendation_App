@@ -9,7 +9,7 @@ from typing import List, Dict
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
-import request
+
 
 api_key = os.getenv("GEMINI_API_KEY")
 #port = os.getenv("PORT",8000)
