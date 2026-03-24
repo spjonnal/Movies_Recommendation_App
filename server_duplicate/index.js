@@ -58,7 +58,7 @@ app.get('/send_data_to_vectorDB', async (req, res) => {
     try {
         const movies_table = await getInformation();
 
-        console.log("movies from db to vector db = ", movies_table);
+        //console.log("movies from db to vector db = ", movies_table);
         res.json(movies_table);
     } catch (err) {
         console.error("Error fetching data:", err);
@@ -94,7 +94,7 @@ app.post('/api/typehead',async(req,res)=>{
     
     //const return_data = await new typeHeadSearch(db,inputText);
     const return_data = await typeHeadSearch_postgres(inputText);
-    console.log("input data from db  =",return_data)
+    //console.log("input data from db  =",return_data)
     res.json({return_data});
   }
   catch(err){
@@ -111,7 +111,7 @@ app.post('/api/movieinfo',async(req,res)=>{
    // const db = db_connection();
     //const complete_movie_info = await specificMovie(db,movie_name);
     const complete_movie_info = await specificMovie(movie_name.selected_movie['title'],movie_name.selected_movie['ratings']);//movie_name.selected_movie);
-    console.log("specific movie information in node = ",complete_movie_info);
+    //console.log("specific movie information in node = ",complete_movie_info);
     res.json(complete_movie_info);
   }
   catch(err){
@@ -208,7 +208,7 @@ app.post('/api/send-trendy-movies', async (req, res) => {
   try {
     const complete_path = path.join(__dirname,'web_scraping.py');
     const return_data_trendy = await getTrendingMovies(complete_path);
-    console.log("trending data in node = ",return_data_trendy);
+    //console.log("trending data in node = ",return_data_trendy);
     res.json(return_data_trendy);
     
   }
@@ -224,7 +224,7 @@ app.post('/api/send-trendy-movies', async (req, res) => {
 app.post('/api/send-contribution-data',async(req,res)=>{
   try{
     const contribution_data = req.body;
-    console.log("contributed data = ",contribution_data);
+    //console.log("contributed data = ",contribution_data);
     const response = await InsertContributionMovie(contribution_data);
     return res.status(200).json({
       success:true,
