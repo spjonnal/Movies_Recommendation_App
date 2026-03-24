@@ -9,6 +9,7 @@ from typing import List, Dict
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
+import request
 
 api_key = os.getenv("GEMINI_API_KEY")
 #port = os.getenv("PORT",8000)
@@ -30,6 +31,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+async def health():
+    return {"status": "ok"}
 
 # ---- Load embeddings ----
 # embeddings = np.load("movie_embeddings.npy")
