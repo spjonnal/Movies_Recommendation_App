@@ -36,7 +36,9 @@ app.add_middleware(
 @app.get("/health")
 async def health():
     return {"status": "ok"}
-
+@app.get("/")
+async def root():
+    return {"status": "ok"}
 # ---- Load embeddings ----
 # embeddings = np.load("movie_embeddings.npy")
 # with open("movie_texts.pkl", "rb") as f:
