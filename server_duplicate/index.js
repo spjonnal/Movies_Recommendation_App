@@ -256,23 +256,33 @@ app.post("/api/ask_llm", async (req, res) => {
 
     res.json(response.data); // IMPORTANT FIX
   } 
-  catch (e) {
-    console.error("❌ FULL ERROR:", e);
-
-    if (e.response) {
-      console.error("❌ FastAPI response error:", e.response.data);
-  
-      return res.status(e.response.status).json({
-        error: "RAG backend error",
-        details: e.response.data
-      });
+    catch (e) {
+    if(e.status === 502){
+      return res.status(502).json({ error: "RAG service is currently unavailable. Please try again later." });
     }
-
-    return res.status(500).json({
-      error: "Backend crash",
-      details: e.message
-    });
+    else if(e.status === 503){
+      res.status(503).json({ error: "Bad gateway" });
+    }
+    else{
+      res.status(500).json({ error: "Unkown Error" });
   }
+  // catch (e) {
+  //   console.error("❌ FULL ERROR:", e);
+
+  //   if (e.response) {
+  //     console.error("❌ FastAPI response error:", e.response.data);
+  
+  //     return res.status(e.response.status).json({
+  //       error: "RAG backend error",
+  //       details: e.response.data
+  //     });
+  //   }
+
+  //   return res.status(500).json({
+  //     error: "Backend crash",
+  //     details: e.message
+  //   });
+  // }
 });
 
 app.listen(PORT, () => {
