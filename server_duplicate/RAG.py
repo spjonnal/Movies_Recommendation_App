@@ -9,7 +9,7 @@ from typing import List, Dict
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
-
+from google.genai.errors import ServerError
 
 api_key = os.getenv("GEMINI_API_KEY")
 #port = os.getenv("PORT",8000)
@@ -19,7 +19,8 @@ if not api_key:
 client = genai.Client(api_key=api_key)
 
 
-model = "gemini-3.1-flash-lite-preview"  # or "gemini-2.0-flash" for the latest version
+#model = "gemini-3.1-flash-lite-preview"  # or "gemini-2.0-flash" 
+model = "gemini-2.5-flash-lite"
 # for mod in client.models.list():
 #     print(mod.name)
 warnings.filterwarnings("ignore")
@@ -154,17 +155,21 @@ async def ask_llm(request: ConversationRequest):
     """
 
     #response = llm.invoke(prompt)
-    response = client.models.generate_content(
-        model=model,
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            max_output_tokens=65530, # default output tokens
-            temperature=0.7,
-            # thinking_config=types.ThinkingConfig(
-            #     thinking_level=types.ThinkingLevel.LOW
-            # )
-        ),
-    )
+    try:
+        response = client.models.generate_content(
+            model=model,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                max_output_tokens=65530, # default output tokens
+                temperature=0.7,
+                # thinking_config=types.ThinkingConfig(
+                #     thinking_level=types.ThinkingLevel.LOW
+                # )
+            ),
+        )
+    except ServerError as e:
+        if e.code == 503:
+            return {"answer": f"This {model} model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later"}
     return {"answer": response.text}
 
 # if __name__ == "__main__":
