@@ -168,7 +168,7 @@ async def ask_llm(request: ConversationRequest):
                 #     thinking_level=types.ThinkingLevel.LOW
                 # )
             ),
-            transport_options={"timeout": 30.0},  # e.g. 30s
+            
         )
     except ServerError as e:
         if e.code == 503:
