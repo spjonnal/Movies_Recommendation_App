@@ -1,55 +1,96 @@
+from select import select
+
 import chromadb, uuid
-from chromadb.config import Settings
-import csv, numpy as np, pandas as pd
-client = chromadb.HttpClient(
-  host="localhost",  # e.g. "api.trychroma.com"
-  port=8001,                      # if using HTTPS / secure port
-  ssl=True,                      # if your endpoint uses HTTPS
-  settings=Settings(
-    chroma_client_auth_provider="chromadb.auth.token_authn.TokenAuthClientProvider",
-    chroma_client_auth_credentials="ck-6BYV9MmX5kp3NCngcYTK5aZp7Usr2YkZ7NEnXY5xRdKv",
-    anonymized_telemetry=False
-  ),
-  tenant="1617e74b-281c-4642-a673-502ce85eb5d8",       # if needed
-  database="Movie Recommendation"  # if needed
-)
+import pandas as pd
+import psycopg2
+import os,sys
+from dotenv import load_dotenv
+def vector_data_retrieval(query):
 
-collection = client.get_or_create_collection("movie_information")
+    load_dotenv("pg_admin4_connect_for_py.env")
 
-# movie_data = pd.read_csv("./final_movie_data.csv")
-# batch_size = 1000
-
-# for i in range(0, movie_data.shape[0], batch_size):
-#     batch = movie_data.iloc[i:i+batch_size]
-
-#     ids = [str(uuid.uuid4()) for _ in range(len(batch))]
-#     documents = batch["Overview"].fillna("N/A").astype(str).tolist()
-#     metadatas = batch[[
-#         "Adult Rated","Release Date","Runtime","Title","Ratings",
-#         "Genre","Available Languages","Cast and Crew"
-#     ]].rename(columns={
-#         "Adult Rated": "certificate",
-#         "Release Date": "release",
-#         "Runtime": "length",
-#         "Title": "title",
-#         "Ratings": "ratings",
-#         "Genre": "genre",
-#         "Available Languages": "languages",
-#         "Cast and Crew": "cast"
-#     }).to_dict(orient="records")
-
-#     collection.add(
-#         ids=ids,
-#         documents=documents,
-#         metadatas=metadatas
-#     )
-#     print(f"Inserted batch {i//batch_size + 1}")
+    pg_host = os.getenv("HOST") 
+    pg_db_name = os.getenv("DB_NAME")
+    pg_user = os.getenv("USER") 
+    pg_port = os.getenv("PORT")
+    pg_password = os.getenv("PASSWORD")
 
 
-output = collection.query(
-    query_texts=["I want to watch something funny"],
-    n_results=15,
-    include=["metadatas","documents"]
-)
+    db_connection = psycopg2.connect(
+        host = pg_host,
+        port = pg_port,
+        database = pg_db_name,
+        password = pg_password,
+        user = pg_user,
+    )
 
-print("output = ",output)
+    cursor = db_connection.cursor()
+    cursor.execute("select distinct(genres) from movie_information where genres is not Null order by genres asc;")
+    unique_genres = cursor.fetchall()
+    values_genres = []
+    for i in unique_genres:
+        values_genres.append(i[0])
+
+
+    client = chromadb.Client()
+    collection = client.get_or_create_collection("movie_information")
+
+
+
+
+    collection.add(
+        ids = [str(uuid.uuid4()) for _ in range(len(values_genres))],                   
+        documents = values_genres,
+        metadatas = [{"genre": genre} for genre in values_genres]
+    )
+
+
+    output = collection.query(
+        query_texts=[query],
+        n_results=2,
+        include=["metadatas"]
+    )
+    resulting_genres = []
+    if output['metadatas'][0]:
+        for i in output['metadatas'][0]:
+            resulting_genres.append(i['genre'])
+    print("resulting genres = ",resulting_genres)
+    entire_data = []
+    for genre in resulting_genres:
+        cursor.execute(
+           f"select * from movie_information where genres like '%{genre}%' where ratings>=5 ORDER BY RANDOM() limit 15;"
+        )
+        data = cursor.fetchall()
+        certificate = data[0][0]
+        imdb_id = data[0][1]
+        overview = data[0][2]
+        release_date = data[0][3]
+        runtime = data[0][4]
+        title = data[0][5]
+        ratings = data[0][6]
+        genres = data[0][7]
+        available_languages = data[0][8]
+        cast_and_crew = data[0][9]
+        youtube_trailer_link = data[0][10]
+        entire_data.append({
+            'Certificate':certificate,
+            'IMDB ID':imdb_id,
+            'Overview':overview,
+            'Release Date':release_date,
+            'Runtime':runtime,
+            'Title':title,
+            'Ratings':ratings,
+            'Genres':genres,
+            'Available Languages':available_languages,
+            'Cast and Crew':cast_and_crew,
+            'Youtube Trailer Link':youtube_trailer_link
+
+        })
+    return entire_data
+        
+
+
+if __name__ == "__main__":
+    node_input = sys.argv[1]
+    print("Node input = ",node_input)
+    vector_data_retrieval(node_input)
