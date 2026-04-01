@@ -1,0 +1,31 @@
+# Ignore large data files (>50 MB)
+Final Movie Dataset.zip
+movies_final_data.zip
+*.zip
+*.npy
+*.pkl
+*.csv
+*.db
+*.ipynb_checkpoints
+
+# Ignore specific server files
+Server/final_movie_data.csv
+Server/movies_final_data.zip
+Server/movie_texts.pkl
+Server/sqdb.db
+Server/movie_embeddings.npy
+
+# Node & Python stuff
+node_modules/
+Server/node_modules/
+client/node_modules/
+__pycache__/
+
+# Environment files
+.env
+*.env
+openapi_key.env
+youtube_api_k
+
+# Build folders
+client/build/

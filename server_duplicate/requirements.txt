@@ -1,0 +1,17 @@
+
+numpy==1.26.4
+pandas==2.2.2
+scikit-learn
+chromadb
+fastapi
+uvicorn
+openai
+google-genai
+psycopg2
+pg
+playwright
+selenium
+lxml
+
+
+

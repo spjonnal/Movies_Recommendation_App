@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 "# Movies_Recommendation_App" 
 =======
 **Mowickie**
@@ -8,6 +9,15 @@ Movie recommendation and conversational AI application that integrates a Node.js
 **Core Components**
 
 **Frontend (React)**
+=======
+Mowickie
+
+Movie recommendation and conversational AI application that integrates a Node.js + React front-end with a Python FastAPI backend (RAG — Retrieval-Augmented Generation) using embeddings and an LLM (ChatOllama).
+
+Core Components
+
+Frontend (React)
+>>>>>>> 50f389296c3649aae1faf89cf5e55bd9b0418e0b
 
 A chat interface for users to interact with the system.
 
@@ -17,7 +27,11 @@ Allows user to input queries about movies and displays responses dynamically.
 
 Handles API calls to the Node.js middleware via fetch.
 
+<<<<<<< HEAD
 **Node.js Middleware**
+=======
+Node.js Middleware
+>>>>>>> 50f389296c3649aae1faf89cf5e55bd9b0418e0b
 
 Acts as a bridge between the React frontend and the Python FastAPI backend.
 
@@ -27,7 +41,11 @@ Returns the LLM’s response back to the frontend.
 
 Handles CORS and JSON payloads.
 
+<<<<<<< HEAD
 **Python Backend (FastAPI)**
+=======
+Python Backend (FastAPI)
+>>>>>>> 50f389296c3649aae1faf89cf5e55bd9b0418e0b
 
 Implements RAG (Retrieval-Augmented Generation):
 
@@ -47,7 +65,11 @@ Supports multiple user queries and is intended to handle follow-up questions (th
 
 CORS enabled so Node.js or frontend can call it.
 
+<<<<<<< HEAD
 **Data**
+=======
+Data
+>>>>>>> 50f389296c3649aae1faf89cf5e55bd9b0418e0b
 
 Embeddings: Precomputed embeddings of movie texts for semantic search.
 
@@ -55,7 +77,11 @@ Movie Texts: The actual movie descriptions or metadata stored in a pickled file.
 
 Optional: Multi-query variations to improve retrieval.
 
+<<<<<<< HEAD
 **Technical Goals / Challenges**
+=======
+Technical Goals / Challenges
+>>>>>>> 50f389296c3649aae1faf89cf5e55bd9b0418e0b
 
 RAG-based movie assistant
 
@@ -77,7 +103,11 @@ React must update state properly to reflect both user and LLM responses.
 
 Git and project structure management
 
+<<<<<<< HEAD
 **Future goals / enhancements**
+=======
+Future goals / enhancements
+>>>>>>> 50f389296c3649aae1faf89cf5e55bd9b0418e0b
 
 Make follow-up responses aware of previous conversation context.
 
@@ -85,7 +115,11 @@ Display pointers / icons (LLM vs user) properly in the frontend chat.
 
 Possibly refine RAG retrieval with multi-query variations or more advanced output parsing.
 
+<<<<<<< HEAD
 **High-Level Workflow**
+=======
+High-Level Workflow
+>>>>>>> 50f389296c3649aae1faf89cf5e55bd9b0418e0b
 
 User types a query in React frontend.
 
@@ -93,7 +127,11 @@ React calls Node.js middleware (/api/ask_llm) with { question: "..." }.
 
 Node.js forwards this to FastAPI backend (/ask_llm) as JSON.
 
+<<<<<<< HEAD
 **FastAPI:**
+=======
+FastAPI:
+>>>>>>> 50f389296c3649aae1faf89cf5e55bd9b0418e0b
 
 Generates query variations.
 
@@ -106,4 +144,7 @@ Returns LLM response as JSON.
 Node.js returns LLM response to React.
 
 React updates llmresponse state to show conversation in the chat UI.
+<<<<<<< HEAD
 >>>>>>> 7f6726014109e98bea4b13655e1cc985167ca7d3
+=======
+>>>>>>> 50f389296c3649aae1faf89cf5e55bd9b0418e0b
