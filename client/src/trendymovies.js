@@ -28,15 +28,16 @@ function TrendyMovies() {
             const data = await response.json();
             
             
-            const keys = Object.keys(data); // column names
-            const rowCount = data?.["Movie Name"].length || [];
-            console.log("trendy movies and rowCount = ",data,rowCount);// this is a dictionary {"key1":[list of values],"key2":[list of values]..}
-            const structured = Array.from({ length: rowCount }, (_, i) => {
-              const row = {};
-              keys.forEach(key => {
-                row[key] = data[key][i];
-              });
-              return row;
+            //const keys = Object.keys(data); // column names
+            //const rowCount = data?.["Movie Name"].length || [];
+            //console.log("trendy movies and rowCount = ",data,rowCount);// this is a dictionary {"key1":[list of values],"key2":[list of values]..}
+            // Convert each movie object to a structured object with readable keys
+            const structured = data.map(movie => {
+                const row = {};
+                Object.entries(movie).forEach(([key, value]) => {
+                    row[formatColumnName(key)] = value;
+                });
+                return row;
             });
 
             setResp(structured);
@@ -74,14 +75,22 @@ function TrendyMovies() {
                 
                     </thead>
                     <tbody>
-                        {resp.map((movie, index) => (
-                        <tr key={index}>
-                            {Object.values(movie).map((value, idx) => (
-                            <td key={idx}>
-                                {value}
-                            </td>
+                        {resp.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                            {Object.entries(row).map(([key, value], idx) => (
+                                <td key={idx}>
+                                {key === "Image Url" ? (
+                                    <img src={value} alt="movie" style={{ width: "100px", height: "auto" }} />
+                                ) : key === "Imdb Url Page" ? (
+                                    <a href={value} target="_blank" rel="noopener noreferrer">
+                                    View on IMDB
+                                    </a>
+                                ) : (
+                                    value
+                                )}
+                                </td>
                             ))}
-                        </tr>
+                            </tr>
                         ))}
                     </tbody>
                     </table>
