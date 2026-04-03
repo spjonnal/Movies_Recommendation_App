@@ -6,15 +6,15 @@ const { rejects } = require("assert")
 const {Pool} = require("pg")
 const{loadEnvFile} = require("node:process")
 
-loadEnvFile('pg_admin4_connect_for_py.env')
+//loadEnvFile('pg_admin4_connect_for_py.env')
 
 
 const pg_pool = new Pool({
-    host : process.env.HOST,
+    host : process.env.DB_HOST,
     database:process.env.DB_NAME,
-    user:process.env.USER,
-    password:process.env.PASSWORD,
-    port:process.env.PORT,
+    user:process.env.DB_USER,
+    password:process.env.DB_PASSWORD,
+    port:process.env.DB_PORT,
     ssl: {
     rejectUnauthorized: false, // REQUIRED for Render
   },
