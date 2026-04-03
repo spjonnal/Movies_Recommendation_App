@@ -58,7 +58,7 @@ def vector_data_retrieval(query):
     entire_data = []
     for genre in resulting_genres:
         cursor.execute(
-           f"select * from movie_information where genres like '%{genre}%' where ratings>=5 ORDER BY RANDOM() limit 15;"
+           f"select * from movie_information where genres like '%{genre}%' and ratings>=3 ORDER BY RANDOM() limit 50;"
         )
         data = cursor.fetchall()
         certificate = data[0][0]
