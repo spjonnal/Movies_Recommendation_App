@@ -76,8 +76,10 @@ function MovieSearch(){
             });
 
             const data = await response.json();
-            console.log("data for typehead in react = ",data.return_data);
-            setSuggestions(data.return_data);
+            
+            setSuggestions(
+                (data.return_data && data.return_data.length>0)? data.return_data : [{Title:"Movie information not found..😰",Ratings:""}]
+            );
         } catch (err) {
             console.error("React fetch error:", err);
         }
@@ -86,7 +88,7 @@ function MovieSearch(){
     const handleMovieClick = async (title)=>{
         
         const selected_movie = title;
-        console.log("selected movie for typehead = ",selected_movie);
+        
         try{
             const movie_complete_info = await fetch(`${api_base}/api/movieinfo`,{
                 method :"POST",
@@ -96,7 +98,7 @@ function MovieSearch(){
                 body:JSON.stringify({selected_movie}),
             });
             const return_data = await movie_complete_info.json();
-            console.log("complete movie information in react = ",return_data);
+            
             setMovieInfo(return_data);
         }
         catch(err){
@@ -126,7 +128,7 @@ function MovieSearch(){
                     
                 });
                 const data = await response.json();
-                console.log("data for genre = ",data);
+                
                 setResp(data.parsedOut);
                 
             } catch (error) {
@@ -157,7 +159,7 @@ function MovieSearch(){
             })
               
             const data = await send_contribution_data.json();
-            console.log("data after insertion = ",data);
+            
             if(data.success){
                 alert("Data inserted. We appreciate your contribution..");
             }
@@ -277,7 +279,7 @@ function MovieSearch(){
                                     <tr key={ind}>
                                         {Object.entries(mov).map(([key,val], i) => (
                                             <td key={i}>{
-                                                key.toLowerCase().includes("url") && typeof val ==="string" && val.startsWith("http")?
+                                                key.toLowerCase().includes("link") && typeof val ==="string" && val.startsWith("https")?
                                                 ( <a href={val} target="_blank" rel="noreferrer">{val}</a>  ):(val)
                                                 }
                                             </td>
