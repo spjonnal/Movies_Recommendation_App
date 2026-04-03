@@ -132,7 +132,7 @@ if __name__ == "__main__":
     dbname=os.environ["DB_NAME"],
     user=os.environ["DB_USER"],
     password=os.environ["DB_PASSWORD"],
-    port=5432
+    port=os.environ["DB_PORT"],
 )
     #csv_data = pd.read_csv('C:\\University_of_Waterloo\\winter 2024\\Django_Project\\Node_React_Movie_App\\movies_final_data.csv',low_memory=False)
     
