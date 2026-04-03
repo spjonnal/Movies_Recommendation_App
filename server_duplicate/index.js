@@ -1,8 +1,6 @@
 
 import express from "express";
 import cors from "cors";
-
-
 const app = express();
 import {spawn} from "child_process";
 import json from "stream/consumers";
@@ -14,12 +12,6 @@ import fast_csv from "fast-csv";
 import {CloudClient} from "chromadb";
 import OPENAI from "openai";
 import axios from "axios";
-import 'dotenv/config';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import path from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 //const {spawn} = require("child_process");
 
 // const { json } = require("stream/consumers");
@@ -32,25 +24,24 @@ const __dirname = dirname(__filename);
 // const CloudClient  = require('chromaDB')
 // const OPENAI = require('openai');
 
-import {movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation,
-  typeHeadSearch, specificMovie,typeHeadSearch_postgres,InsertContributionMovie
+import {db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation,
+  typeHeadSearch, specificMovie,getWebScrapedTrendyMovies
 } from './db_file.cjs';
 import { type } from "os";
 
 
-const PORT = process.env.PORT || 4000;
+
+
 
 app.use(express.json())
 app.use(cors());
 
 // const openai = new OPENAI({
-//   apiKey: process.env.OPENAIKEY
-  
+//   apiKey: "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",
 // });
 
-
-
 const COLLECTION_NAME = "movie_recommendation_system";
+
 
 
 
@@ -58,13 +49,14 @@ app.get('/send_data_to_vectorDB', async (req, res) => {
     try {
         const movies_table = await getInformation();
 
-        //console.log("movies from db to vector db = ", movies_table);
+        console.log("movies from db to vector db = ", movies_table);
         res.json(movies_table);
     } catch (err) {
         console.error("Error fetching data:", err);
         res.status(500).json({ error: "Failed to fetch movies" });
     }
 });
+
 
 
 app.get("/", (req, res) => {
@@ -76,9 +68,9 @@ app.post('/api/send-genre',async (req,res)=>{
     try{
 
     const genre = req.body;//get the genre
-    
-    //const py_output = await executePython('count_vectorizer.py',[JSON.stringify(genre.inputText)]); // send to python for execution
-    const py_output = await executePython('chromaDBConnect.py',[JSON.stringify(genre.inputText)]); 
+    console.log("genre from node = ",genre);
+    //const py_output = await executePython('count_vectorizer.py',[genre.inputText]); // send to python for execution
+    const py_output = await executePython('chromaDBConnect.py',[genre.inputText]);
     const parsedOut = JSON.parse(py_output.toString()); // response
     res.json({parsedOut});
     
@@ -91,11 +83,10 @@ app.post('/api/send-genre',async (req,res)=>{
 app.post('/api/typehead',async(req,res)=>{
   try{
     const {inputText} = req.body;
-    //const db = db_connection();
+    const db = db_connection();
     
-    //const return_data = await new typeHeadSearch(db,inputText);
-    const return_data = await typeHeadSearch_postgres(inputText);
-    //console.log("input data from db  =",return_data)
+    const return_data = await new typeHeadSearch(db,inputText);
+    
     res.json({return_data});
   }
   catch(err){
@@ -107,13 +98,10 @@ app.post('/api/movieinfo',async(req,res)=>{
   try{
     const movie_name = req.body;
     
-    console.log("type head movie in node = ",movie_name.selected_movie);
+    const db = db_connection();
+    const complete_movie_info = await specificMovie(db,movie_name.selected_movie);
     
-   // const db = db_connection();
-    //const complete_movie_info = await specificMovie(db,movie_name);
-    const complete_movie_info = await specificMovie(movie_name.selected_movie['title'],movie_name.selected_movie['ratings']);//movie_name.selected_movie);
-    //console.log("specific movie information in node = ",complete_movie_info);
-    res.json(complete_movie_info);
+    res.json({complete_movie_info});
   }
   catch(err){
     console.error("some error in db while getting movie info = ",err.toString());
@@ -122,7 +110,7 @@ app.post('/api/movieinfo',async(req,res)=>{
 
 const executePython = (path, args) => {
     return new Promise((resolve, reject) => {
-        const py_call = spawn("python3", [path, args]);
+        const py_call = spawn("python", [path, args]);
         let py_out = '';
         let error_output = '';
 
@@ -143,37 +131,10 @@ const executePython = (path, args) => {
         });
     });
 };
-const getTrendingMovies = (path) => {
-  return new Promise((resolve, reject) => {
-    const pythonProcess = spawn('python', [path]);
-    let dataString = '';
-    let error_out = '';
 
-    pythonProcess.stdout.on('data', (data) => {
-      dataString += data.toString();
-    });
-
-    pythonProcess.stderr.on('data', (err) => {
-      error_out += err.toString();
-    });
-
-    pythonProcess.on('close', (code) => {
-      if (code !== 0) {
-        reject(`Python exited with code ${code}. Error: ${error_out}`);
-      } else {
-        try {
-          const parsed = JSON.parse(dataString); 
-          resolve(parsed);
-        } catch (err) {
-          reject(`Invalid JSON from Python: ${dataString}\nError: ${err}`);
-        }
-      }
-    });
-  });
-};
 // const getTrendingMovies = (path) => {
 //   return new Promise((resolve, reject) => {
-//     const pythonProcess = spawn('python3', [path]);
+//     const pythonProcess = spawn('python', [path]);
 //     let dataString = '';
 //     let error_out = '';
 
@@ -187,17 +148,13 @@ const getTrendingMovies = (path) => {
 
 //     pythonProcess.on('close', (code) => {
 //       if (code !== 0) {
-//         reject(new Error(`Python exited with code ${code}. Error: ${error_out}`));
+//         reject(`Python exited with code ${code}. Error: ${error_out}`);
 //       } else {
 //         try {
-//           const parsed = JSON.parse(dataString.trim()); 
+//           const parsed = JSON.parse(dataString); 
 //           resolve(parsed);
 //         } catch (err) {
-//           console.error("error in web scraping =", err);
-//           res.status(500).json({
-//             error: "Failed to fetch trending movies",
-//             details: err.message
-//           });
+//           reject(`Invalid JSON from Python: ${dataString}\nError: ${err}`);
 //         }
 //       }
 //     });
@@ -207,48 +164,24 @@ const getTrendingMovies = (path) => {
 
 app.post('/api/send-trendy-movies', async (req, res) => {
   try {
-    const complete_path = path.join(__dirname,'web_scraping.py');
-    const return_data_trendy = await getTrendingMovies(complete_path);
-    //console.log("trending data in node = ",return_data_trendy);
+    const return_data_trendy = await getWebScrapedTrendyMovies() ;//getTrendingMovies('web_scraping.py');
     res.json(return_data_trendy);
     
   }
   catch(err){
-    console.error("error in web scraping = ",err.toString());
-    res.status(500).json({
-      error: err,
-      type: typeof err
-    });
+    console.error("error in web scraping = ",err.error);
   }
 });
 
-app.post('/api/send-contribution-data',async(req,res)=>{
-  try{
-    const contribution_data = req.body;
-    //console.log("contributed data = ",contribution_data);
-    const response = await InsertContributionMovie(contribution_data);
-    return res.status(200).json({
-      success:true,
-      response
-    });
-  }
-  catch(err){
-    console.error("error in inserting contributed data",err.toString());
-    return res.status(500).json({
-      success:false,
-      error:err.toString()
-    });
-  }
-});
 
 app.post("/api/ask_llm", async (req, res) => {
-  
+  console.log("the question from the frontend = ", req.body.conversation);
   try {
     
     
     const response = await axios.post(
       "https://mowickie-rag-service.onrender.com/ask_llm",
-      { conversation:req.body.conversation },
+       {conversation: req.body.conversation},
       { headers: { "Content-Type": "application/json" } }
     );
 
@@ -257,20 +190,12 @@ app.post("/api/ask_llm", async (req, res) => {
     res.json(response.data); // IMPORTANT FIX
   } 
   catch (e) {
-    if(e.status === 502){
-      return res.status(502).json({ error: "RAG service is currently unavailable. Please try again later." });
-    }
-    else if(e.status === 503){
-      res.status(503).json({ error: "Bad gateway" });
-    }
-    else{
-      res.status(500).json({ error: "Unkown Error" });
+    console.error("some error:", e.toString());
+    res.status(500).json({ error: "Backend error", details: e.toString() });
   }
-}
 });
 
-app.listen(PORT, () => {
-  console.log("dir name =",__dirname);
-  console.log(`Example app listening on port ${PORT}`)
-})
+app.listen(4001, () => {
+    console.log("Server is running at http://localhost:4001");
+});
 

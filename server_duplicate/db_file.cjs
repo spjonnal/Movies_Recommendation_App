@@ -4,26 +4,31 @@ const csv_parse = require("csv-parser")
 const { resolve } = require("path")
 const { rejects } = require("assert")
 const {Pool} = require("pg")
-// function db_connection(){
-//     const db = new sqdb.Database("sqdb.db",sqdb.OPEN_READWRITE,(err)=>{
-//         if(err){
-//             console.error(err.message)
-//         }
-        
-//     })
-//     return db
-// }
+const{loadEnvFile} = require("node:process")
+
+loadEnvFile('pg_admin4_connect_for_py.env')
+
 
 const pg_pool = new Pool({
-    host : process.env.DB_HOST,
+    host : process.env.HOST,
     database:process.env.DB_NAME,
-    user:process.env.DB_USER,
-    password:process.env.DB_PASSWORD,
-    port:5432,
+    user:process.env.USER,
+    password:process.env.PASSWORD,
+    port:process.env.PORT,
     ssl: {
     rejectUnauthorized: false, // REQUIRED for Render
   },
 });
+function db_connection(){
+    const db = new sqdb.Database("sqdb.db",sqdb.OPEN_READWRITE,(err)=>{
+        if(err){
+            console.error(err.message)
+        }
+        
+    })
+    return db
+}
+
 
 function movie_recom_table_create(db){
     console.log("came to create a table",db)
@@ -123,6 +128,7 @@ async function InsertIntoDB(db) {
 
 
 
+
 function dataCheck(){
     db = db_connection();
     db.get("SELECT COUNT(*) AS count from movie_information",(err,row)=>{
@@ -175,38 +181,46 @@ function getInformation() {
     
 }
 
+async function getWebScrapedTrendyMovies() {
+    try{
+        const web_scraped_trending_movies = await pg_pool.query(
+            `
+            select movie_name,imdb_ratings,runtime,genre,certificate,overview,image_url,imdb_url_page from trending_movies ORDER BY RANDOM(), imdb_ratings DESC
+            `
+        )
+        //console.log("trending movies = ",web_scraped_trending_movies.rows)
+        return web_scraped_trending_movies.rows;
+        
+    }
+    catch(err){
+        throw err;
+    }
+    
+}
+
+
 function typeHeadSearch(db, query) {
     return new Promise((resolve, reject) => {
-        db.all(
-            "SELECT title, ratings, release_date from (SELECT DISTINCT  title, ratings, release_date FROM movie_information WHERE title LIKE ? AND ratings >= 5) ORDER BY RANDOM()  LIMIT 25  ",
-            [`%${query}%`],
-            (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
+        try{
+                
+        
+            db.all(
+                "SELECT DISTINCT Title, Ratings, `Release Date` FROM movie_information WHERE Title LIKE ? AND Ratings >= 5 ORDER by RANDOM() LIMIT 25 ",
+                [`%${query}%`],
+                (err, rows) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
                 }
-            }
-        );
+            );
+        }
+        catch(err){
+            throw err;
+        }
     });
 }
-
-async function typeHeadSearch_postgres(query) {
-  try {
-    const result = await pg_pool.query(
-     `
-         SELECT title, ratings, release_date from 
-        (SELECT DISTINCT  title, ratings, release_date FROM movie_information WHERE title ILIKE $1 AND ratings >= 5)
-        ORDER BY RANDOM()  LIMIT 25 
-     `,
-      [`%${query}%`]
-    );
-    return result.rows;
-  } catch (err) {
-    throw err;
-  }
-}
-
 
 function getFullMovie(db,movie_name){
     return new Promise((resolve, reject) => {
@@ -223,101 +237,33 @@ function getFullMovie(db,movie_name){
         );
     });
 }
-function mapMovieRow(row) {
-  return {
-    "Adult Rated": row.adult_rated,
-    "IMDB ID": row.imdb_id,
-    "Overview": row.overview,
-    "Release Date": row.release_date
-      ? row.release_date.toISOString().split("T")[0]
-      : null,
-    "Runtime": row.runtime,
-    "Title": row.title,
-    "Ratings": row.ratings,
-    "Genres": row.genres,
-    "Available Languages": row.available_languages,
-    "Cast & Crew": row.cast_and_crew,
-  };
+
+function specificMovie(db,movie_name){
+    console.log("movie name in db = ",movie_name);
+    return new Promise((resolve, reject) => {
+        
+        db.all(
+            "SELECT * FROM movie_information WHERE Title = ? LIMIT 1 ",
+            [`${movie_name}`],
+            (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            }
+        );
+    });
 }
 
-async function specificMovie(movie_name,ratings){
-    console.log("movie name in db = ",movie_name,ratings);
-    try{
-        const specific_movie = await pg_pool.query(
-            `
-            SELECT * FROM movie_information WHERE Title = $1 and Ratings = $2 LIMIT 1
-            `,
-            [`${movie_name}`,`${ratings}`]
-        );
-        console.log("specific movie from db response = ",specific_movie.rows[0]);
-        return mapMovieRow(specific_movie.rows[0]);
-    }
-    catch(error){
-        console.log("specific movie issue = ",error.toString());
-    }
-}
-
-async function InsertContributionMovie(movie_info){
-    let certificate = movie_info['certificates'];
-    let final_certificate = false;
-    if (['U','U/A','PG','PG-13','Nota'].includes(certificate)) {
-        final_certificate = false;
-    } else if (['R','18+','A','S','NC-17'].includes(certificate)) {
-        final_certificate = true;
-    }
-    
-    let movie_duration = movie_info['movie_duration']
-    movie_duration = parseInt(movie_duration);
-    let hours = Math.floor( movie_duration / 60);
-    let minutes = movie_duration % 60;
-    const final_movie_duration = String(hours)+"h"+":"+String(minutes)+"m";
-    const release_date = movie_info['release_date'];
-    const ratings = parseFloat(movie_info['imdb_rating']);
-    console.log("some changes in parameters before entering contributed data = ",final_movie_duration,final_certificate,release_date,ratings);
-    
-    try{
-        
-        
-        const status = await pg_pool.query(
-            `
-                INSERT INTO movie_information (
-                                adult_rated, release_date, runtime, title ,
-                                ratings, genres, available_languages , cast_and_crew 
-                            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-            ` ,
-            [final_certificate,release_date,final_movie_duration,movie_info['movie_name'],
-                ratings,movie_info['genres'],movie_info['dubbing'],movie_info['cast_and_crew']
-            ]
-            
-            // (err, rows) => {
-            //     if (err) {
-            //         reject(err);
-            //     } else {
-            //         resolve({ movieId: this.lastID });
-            //     }
-            // }
-        
-        );
-        return({
-            success:true,
-            movieId:status.rows[0]
-        });
-    }
-    catch(err){
-        console.log("some error while inserting contributed data = ",err.toString());
-        return({
-            success:false,
-            error:err.toString()
-        });
-    }
-}
 
 module.exports={
-    movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation, typeHeadSearch, specificMovie,typeHeadSearch_postgres,InsertContributionMovie
+    db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation, 
+    typeHeadSearch, specificMovie,getWebScrapedTrendyMovies
 }
 
-// if (require.main === module) {
-//     const db = db_connection();
-//     const create_table = getInformation();
-//     db.close();
-// }
+if (require.main === module) {
+    // const db = db_connection();
+    const create_table =  getWebScrapedTrendyMovies();
+    
+}
