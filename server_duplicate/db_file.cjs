@@ -199,27 +199,25 @@ async function getWebScrapedTrendyMovies() {
 }
 
 
-function typeHeadSearch(db, query) {
-    return new Promise((resolve, reject) => {
-        try{
-                
+async function typeHeadSearch(query) {
+    try{
+        const respone = await pg_pool.query(
+            `
+            select title, max(ratings) as ratings from movie_information where ratings >= 5 and title Ilike $1
+            group by title order by random() limit 25; 
+
+            `,[`%${query}%`]
+
+        )
         
-            db.all(
-                "SELECT DISTINCT Title, Ratings, `Release Date` FROM movie_information WHERE Title LIKE ? AND Ratings >= 5 ORDER by RANDOM() LIMIT 25 ",
-                [`%${query}%`],
-                (err, rows) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(rows);
-                    }
-                }
-            );
-        }
-        catch(err){
-            throw err;
-        }
-    });
+    }    
+    catch(err){
+        throw err;
+    }
+    finally{
+        pg_pool.close();
+    }
+        
 }
 
 function getFullMovie(db,movie_name){
