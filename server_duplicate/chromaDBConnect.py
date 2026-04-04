@@ -35,15 +35,11 @@ def vector_data_retrieval(query):
     client = chromadb.Client()
     collection = client.get_or_create_collection("movie_information")
 
-
-
-
     collection.add(
         ids = [str(uuid.uuid4()) for _ in range(len(values_genres))],                   
         documents = values_genres,
         metadatas = [{"genre": genre} for genre in values_genres]
     )
-
 
     output = collection.query(
         query_texts=[query],
@@ -54,7 +50,7 @@ def vector_data_retrieval(query):
     if output['metadatas'][0]:
         for i in output['metadatas'][0]:
             resulting_genres.append(i['genre'])
-    print("resulting genres = ",resulting_genres)
+    
     entire_data = []
     for genre in resulting_genres:
         cursor.execute(
