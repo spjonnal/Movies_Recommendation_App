@@ -84,7 +84,7 @@ app.post('/api/typehead',async(req,res)=>{
   try{
     const {inputText} = req.body;
     
-    const return_data = await new typeHeadSearch(inputText);
+    const return_data = await typeHeadSearch(inputText);
     
     res.json({return_data});
   }
