@@ -92,5 +92,4 @@ def vector_data_retrieval(query):
 
 if __name__ == "__main__":
     node_input = sys.argv[1]
-    print("Node input = ",node_input)
     vector_data_retrieval(node_input)
