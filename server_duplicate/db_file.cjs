@@ -236,11 +236,13 @@ function getFullMovie(db,movie_name){
 
 async function specificMovie(movie_name){
     try{
+        
         const full_movie = await pg_pool.query(
             `
-            SELECT * FROM movie_information where title = $1 LIMIT 1;
-            `, [`%${movie_name}%`]
+            SELECT * FROM movie_information where title LIKE $1 LIMIT 1;
+            `, [`%${movie_name.title}%`]
         )
+        
         return full_movie.rows;
     }
     catch(err){
