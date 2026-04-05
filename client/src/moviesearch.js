@@ -18,7 +18,7 @@ function MovieSearch(){
     const [closeTypeHeadDataInfo, setCloseTypeHeadDataInfo] = useState(false);
     const [typeHead, setTypeHead] = useState("");
     const [suggestions, setSuggestions] = useState([]);
-    //const api_base = process.env.REACT_APP_API_BASE;
+    const api_base = process.env.REACT_APP_API_BASE;
     const [movie_info, setMovieInfo] = useState([]);
     const [postMovieData, setPostMovieData] = useState({
         movie_name: "",
@@ -69,7 +69,7 @@ function MovieSearch(){
         }
 
         try {
-            const response = await fetch("http://localhost:4001/api/typehead", {
+            const response = await fetch(`${api_base}/api/typehead`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ inputText }),
@@ -90,7 +90,7 @@ function MovieSearch(){
         const selected_movie = title;
         
         try{
-            const movie_complete_info = await fetch("http://localhost:4001/api/movieinfo",{
+            const movie_complete_info = await fetch(`${api_base}/api/movieinfo`,{
                 method :"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -118,7 +118,7 @@ function MovieSearch(){
         
             try {
                 setLoading(true);
-                const response = await fetch("http://localhost:4001/api/send-genre", {
+                const response = await fetch(`${api_base}/api/send-genre`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -150,7 +150,7 @@ function MovieSearch(){
             
             
         
-            const send_contribution_data = await fetch("http://localhost:4001/api/send-contribution-data",{
+            const send_contribution_data = await fetch(`${api_base}/api/send-contribution-data`,{
                 method:"POST",
                 headers:{
                     "Content-Type": "application/json"
