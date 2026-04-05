@@ -209,7 +209,7 @@ async function typeHeadSearch(query) {
             `,[`%${query}%`]
 
         )
-        
+        retrurn response.rows;
     }    
     catch(err){
         throw err;
