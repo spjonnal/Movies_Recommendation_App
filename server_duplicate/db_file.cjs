@@ -243,7 +243,7 @@ async function specificMovie(movie_name){
         )
         return full_movie.rows;
     }
-    const(err){
+    catch(err){
         throw err;
     }
 }
