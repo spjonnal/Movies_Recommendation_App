@@ -456,3 +456,48 @@ select {
   background-color: indianred;
   color: ivory;
 }
+
+.movie-card {
+  width: 90%;
+  height: 85%;
+  border: 1em solid #e933066f;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 10px;
+  text-wrap: inherit;
+}
+
+/* Title + metadata in one line */
+.movie-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: xx-large;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: darkmagenta;
+}
+
+/* Right side info */
+.movie-meta {
+  
+  font-size: 14px;
+  display: flex;
+  gap: 1em;
+  font-size: x-large;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+}
+
+/* Sections below */
+.movie-section {
+  margin-top: 12px;
+  font-size: large;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: brown;
+}
+
+.trending_movies_word_cloud{
+  width: 100%;
+  height: 100%;
+}

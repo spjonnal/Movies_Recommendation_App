@@ -52,4 +52,4 @@ const SelectGenre = ({name = 'genres', id= "movie_genres", onChange, value})=>{
     )
 }
 
-export default SelectGenre
+export default SelectGenre;

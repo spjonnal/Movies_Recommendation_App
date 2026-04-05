@@ -1,8 +1,8 @@
 // export default App;
 import React from 'react';
 import './App.css';
-import TrendyMovies from './trendymovies';
-import MovieSearch from './moviesearch';
+import TrendyMovies from './trendymovies.js';
+import MovieSearch from './moviesearch.js';
 
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 function App() {
@@ -15,7 +15,7 @@ function App() {
                         <Link to = "/">Movie Search</Link>
                     </li>
                     <li>
-                        <Link to="/trendymovies">Trending Movies</Link>
+                        <Link to="/trendymovies.js">Trending Movies</Link>
                     </li>
 
                 </ul>
@@ -23,7 +23,7 @@ function App() {
 
             <Routes>
                 <Route index path="/" element={<MovieSearch/>} />
-                <Route  path="/trendymovies" element={<TrendyMovies />} />
+                <Route  path="/trendymovies.js" element={<TrendyMovies />} />
             </Routes>
         </BrowserRouter>
         

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-
+import './App.css'
+import word_cloud from './word_cloud_for_trending_movies.jpg'
 function TrendyMovies() {
     const [resp, setResp] = useState([]);
     const [loading , setLoading] = useState(false);
-    const api_base = process.env.REACT_APP_API_BASE;
+    //const api_base = process.env.REACT_APP_API_BASE;
     // Utility function to format column names
     const formatColumnName = (name) => {
     return name
@@ -11,49 +12,52 @@ function TrendyMovies() {
         .replace(/\b\w/g, (c) => c.toUpperCase()); // capitalize each word
     };
 
+
     const nodeTrendyInformation = async (event) => {
         event.preventDefault();
-        try {
+       try {
             setLoading(true);
-            const response = await fetch(`${api_base}/api/send-trendy-movies`, {
+            const response = await fetch("http://localhost:4001/api/send-trendy-movies", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                }
+                headers: { "Content-Type": "application/json" }
             });
-            if(!response.ok){
+
+            if (!response.ok) {
                 const err_msg = await response.text();
-                throw new Error(`Backend error ${response.status}:${err_msg}`);
+                throw new Error(`Backend error ${response.status}: ${err_msg}`);
             }
+
             const data = await response.json();
-            
-            
-            const keys = Object.keys(data); // column names
-            const rowCount = data?.["Movie Name"].length || [];
-            console.log("trendy movies and rowCount = ",data,rowCount);// this is a dictionary {"key1":[list of values],"key2":[list of values]..}
-            const structured = Array.from({ length: rowCount }, (_, i) => {
-              const row = {};
-              keys.forEach(key => {
-                row[key] = data[key][i];
-              });
-              return row;
+            //const keys = Object.keys(data); // column names
+
+            // Convert each movie object to a structured object with readable keys
+            const structured = data.map(movie => {
+                const row = {};
+                Object.entries(movie).forEach(([key, value]) => {
+                    row[formatColumnName(key)] = value;
+                });
+                return row;
             });
 
             setResp(structured);
-            
 
-        } catch (err) {
-            console.error("the error in trendy movies react code = ",err.toString());
         }
-        finally{
+        catch (err) {
+            console.error("the error in trendy movies react code =", err.toString());
+        } 
+        finally {
             setLoading(false);
-        }
+        } 
     };
     return (
+        
         <div>
             {
                 resp.length === 0 && (
+                    <div>
+                    <img src = {word_cloud} alt="Trending movies" className = "trending_movies_word_cloud"/>
                     <button className='trendy_movies_button' onClick={nodeTrendyInformation}>Find out which movies are trending here..</button>
+                    </div>
                 )
             }
             {
@@ -74,14 +78,22 @@ function TrendyMovies() {
                 
                     </thead>
                     <tbody>
-                        {resp.map((movie, index) => (
-                        <tr key={index}>
-                            {Object.values(movie).map((value, idx) => (
-                            <td key={idx}>
-                                {value}
-                            </td>
+                        {resp.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                            {Object.entries(row).map(([key, value], idx) => (
+                                <td key={idx}>
+                                {key === "Image Url" ? (
+                                    <img src={value} alt="movie" style={{ width: "100px", height: "auto" }} />
+                                ) : key === "Imdb Url Page" ? (
+                                    <a href={value} target="_blank" rel="noopener noreferrer">
+                                    View on IMDB
+                                    </a>
+                                ) : (
+                                    value
+                                )}
+                                </td>
                             ))}
-                        </tr>
+                            </tr>
                         ))}
                     </tbody>
                     </table>
@@ -89,6 +101,7 @@ function TrendyMovies() {
             )}
             
         </div>
+        
     );
 }
 

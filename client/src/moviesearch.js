@@ -1,7 +1,7 @@
 import React, {  useState } from 'react';
 
-import SelectGenre from './resue_select_genre';
-import Chatbotlogic from './chatbotlogic';
+import SelectGenre from './resue_select_genre.js';
+import Chatbotlogic from './chatbotlogic.js';
 
 import './App.css'
 // import { data } from 'react-router-dom'
@@ -18,7 +18,7 @@ function MovieSearch(){
     const [closeTypeHeadDataInfo, setCloseTypeHeadDataInfo] = useState(false);
     const [typeHead, setTypeHead] = useState("");
     const [suggestions, setSuggestions] = useState([]);
-    const api_base = process.env.REACT_APP_API_BASE;
+    //const api_base = process.env.REACT_APP_API_BASE;
     const [movie_info, setMovieInfo] = useState([]);
     const [postMovieData, setPostMovieData] = useState({
         movie_name: "",
@@ -69,7 +69,7 @@ function MovieSearch(){
         }
 
         try {
-            const response = await fetch(`${api_base}/api/typehead`, {
+            const response = await fetch("http://localhost:4001/api/typehead", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ inputText }),
@@ -77,7 +77,9 @@ function MovieSearch(){
 
             const data = await response.json();
             console.log("data for typehead in react = ",data.return_data);
-            setSuggestions(data.return_data);
+            setSuggestions(
+                (data.return_data && data.return_data.length>0)? data.return_data : [{title:"Movie information not found..😰",ratings:""}]
+            );
         } catch (err) {
             console.error("React fetch error:", err);
         }
@@ -88,7 +90,7 @@ function MovieSearch(){
         const selected_movie = title;
         console.log("selected movie for typehead = ",selected_movie);
         try{
-            const movie_complete_info = await fetch(`${api_base}/api/movieinfo`,{
+            const movie_complete_info = await fetch("http://localhost:4001/api/movieinfo",{
                 method :"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -116,7 +118,7 @@ function MovieSearch(){
         
             try {
                 setLoading(true);
-                const response = await fetch(`${api_base}/api/send-genre`, {
+                const response = await fetch("http://localhost:4001/api/send-genre", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -148,7 +150,7 @@ function MovieSearch(){
             
             
         
-            const send_contribution_data = await fetch(`${api_base}/api/send-contribution-data`,{
+            const send_contribution_data = await fetch("http://localhost:4001/api/send-contribution-data",{
                 method:"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -214,7 +216,7 @@ function MovieSearch(){
                                 <ul id='typeheadbackground'>
                                     {suggestions.map((value,ind)=>{
                                         return (
-                                            <li onMouseDown={(e)=> {e.preventDefault(); handleMovieClick(value);}} key={ind}>{value.title},&nbsp;&nbsp;{value.ratings}</li>
+                                            <li onMouseDown={(e)=> {e.preventDefault(); handleMovieClick(value);}} key={ind}>{value.title}&nbsp;&nbsp;{value.ratings}</li>
                                             // using onMouseDown event instead of onClick as we are trying to overcome the input loosing focus case
                                         );
                                     })}
@@ -224,19 +226,50 @@ function MovieSearch(){
                    </div>
                     <button id = "submit_button" type='submit'>Submit</button>
                 </form>
-                {movie_info && Object.keys(movie_info).length > 0 && !closeDataInfo && (
+                {movie_info.complete_movie_info && movie_info.complete_movie_info.length > 0 && !closeDataInfo && (
                     <>
                         <button type="button" id="cancel_movie_data" onClick={handleSetCloseMovieInfo}>X</button>
-                        <table>
-                            <tbody>
-                                {Object.entries(movie_info).map(([key, value]) => (
-                                    <tr key={key}>
-                                        <th>{key}</th>
-                                        <td>{String(value)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        {movie_info?.complete_movie_info?.map((movie, index) => (
+                            <div key={index} className="movie-card">
+
+                                {/* Top row */}
+                                <div className="movie-header">
+                                <h2>{movie.title}</h2>
+
+                                <div className="movie-meta">
+                                    <span>⭐ {movie.ratings}</span>
+                                    <span>{movie.genres}</span>
+                                    <span>{movie.runtime}</span>
+                                    <span>{new Date(movie.release_date).toISOString().split('T')[0]}</span>
+                                </div>
+                                </div>
+
+                                {/* Overview */}
+                                <div className="movie-section">
+                                <h3>Overview</h3>
+                                <p>{movie.overview}</p>
+                                </div>
+
+                                {/* Cast */}
+                                {movie.cast_and_crew && (
+                                <div className="movie-section">
+                                    <h3>Cast & Crew</h3>
+                                    <p>{movie.cast_and_crew}</p>
+                                </div>
+                                )}
+
+                                {/* Trailer */}
+                                {movie.youtube_trailer_link && (
+                                <div className="movie-section">
+                                    <h3>Trailer</h3>
+                                    <a href={movie.youtube_trailer_link} target="_blank" rel="noopener noreferrer">
+                                    Watch on YouTube
+                                    </a>
+                                </div>
+                                )}
+
+                            </div>
+                        ))}
                     </>
                 )}
                 {
@@ -261,7 +294,30 @@ function MovieSearch(){
                     !closeDataInfo && (
                         <>
                         <button type='button' id = 'cancel_movie_data' onClick={handleSetCloseMovieInfo}>X</button>
-                        <table >
+                        {
+                            sorting.map((movie,index)=>(
+                                <div key={index} className = "movie-card">
+                                    <div className = "movie-header">
+                                    <h2>{movie['Title']}</h2>
+                                    <div className = "movie-meta">
+                                        <span>{movie['Ratings']}</span>
+                                        <span>{movie['Gernes']}</span>
+                                        <span>{movie['Runtime']}</span>
+                                        <span>{new Date(movie['Release Date']).toISOString().split('T')[0]}</span>
+                                    </div>
+                                    </div>
+                                    <div className = "movie-section">
+                                        <h3>Overview</h3>
+                                        <span>{movie['Overview']}</span>
+                                        <h3>Cast and Crew</h3>
+                                        <span>{movie['Cast and Crew']}</span>
+                                        <a href = {movie['Youtube Trailer Link']} target = "_blank" without rel="noreferrer">Watch on YouTube</a>
+                                    </div>
+                                </div>
+                                
+                            ))
+                        }
+                        {/* <table >
                             <thead>
                                 <tr>
                                     {Object.keys(sorting[0]).map((col_name, key) => (
@@ -277,7 +333,7 @@ function MovieSearch(){
                                     <tr key={ind}>
                                         {Object.entries(mov).map(([key,val], i) => (
                                             <td key={i}>{
-                                                key.toLowerCase().includes("url") && typeof val ==="string" && val.startsWith("http")?
+                                                key.toLowerCase().includes("link") && typeof val ==="string" && val.startsWith("https")?
                                                 ( <a href={val} target="_blank" rel="noreferrer">{val}</a>  ):(val)
                                                 }
                                             </td>
@@ -287,7 +343,7 @@ function MovieSearch(){
                                     
                                 ))}
                             </tbody>
-                        </table>
+                        </table> */}
                         </>
                     )
                 )}
