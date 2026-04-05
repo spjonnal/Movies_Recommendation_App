@@ -6,15 +6,15 @@ const { rejects } = require("assert")
 const {Pool} = require("pg")
 const{loadEnvFile} = require("node:process")
 
-loadEnvFile('pg_admin4_connect_for_py.env')
+//loadEnvFile('pg_admin4_connect_for_py.env')
 
 
 const pg_pool = new Pool({
-    host : process.env.HOST,
+    host : process.env.DB_HOST,
     database:process.env.DB_NAME,
-    user:process.env.USER,
-    password:process.env.PASSWORD,
-    port:process.env.PORT,
+    user:process.env.DB_USER,
+    password:process.env.DB_PASSWORD,
+    port:process.env.DB_PORT,
     ssl: {
     rejectUnauthorized: false, // REQUIRED for Render
   },
@@ -199,27 +199,23 @@ async function getWebScrapedTrendyMovies() {
 }
 
 
-function typeHeadSearch(db, query) {
-    return new Promise((resolve, reject) => {
-        try{
-                
+async function typeHeadSearch(query) {
+    try{
+        const response = await pg_pool.query(
+            `
+            select title, max(ratings) as ratings from movie_information where ratings >= 5 and title like $1
+            group by title order by random() limit 25; 
+
+            `,[`%${query}%`]
+
+        )
+        return response.rows;
+    }    
+    catch(err){
+        throw err;
+    }
+    
         
-            db.all(
-                "SELECT DISTINCT Title, Ratings, `Release Date` FROM movie_information WHERE Title LIKE ? AND Ratings >= 5 ORDER by RANDOM() LIMIT 25 ",
-                [`%${query}%`],
-                (err, rows) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(rows);
-                    }
-                }
-            );
-        }
-        catch(err){
-            throw err;
-        }
-    });
 }
 
 function getFullMovie(db,movie_name){
@@ -238,22 +234,18 @@ function getFullMovie(db,movie_name){
     });
 }
 
-function specificMovie(db,movie_name){
-    console.log("movie name in db = ",movie_name);
-    return new Promise((resolve, reject) => {
-        
-        db.all(
-            "SELECT * FROM movie_information WHERE Title = ? LIMIT 1 ",
-            [`${movie_name}`],
-            (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            }
-        );
-    });
+async function specificMovie(movie_name){
+    try{
+        const full_movie = await pg_pool.query(
+            `
+            SELECT * FROM movie_information where title = $1 LIMIT 1;
+            `, [`%${movie_name}%`]
+        )
+        return full_movie.rows;
+    }
+    catch(err){
+        throw err;
+    }
 }
 
 

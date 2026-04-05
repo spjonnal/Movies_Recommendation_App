@@ -1,3 +1,4 @@
+import json
 from select import select
 
 import chromadb, uuid
@@ -7,13 +8,13 @@ import os,sys
 from dotenv import load_dotenv
 def vector_data_retrieval(query):
 
-    load_dotenv("pg_admin4_connect_for_py.env")
+    #load_dotenv("pg_admin4_connect_for_py.env")
 
-    pg_host = os.getenv("HOST") 
+    pg_host = os.getenv("DB_HOST") 
     pg_db_name = os.getenv("DB_NAME")
-    pg_user = os.getenv("USER") 
-    pg_port = os.getenv("PORT")
-    pg_password = os.getenv("PASSWORD")
+    pg_user = os.getenv("DB_USER") 
+    pg_port = os.getenv("DB_PORT")
+    pg_password = os.getenv("DB_PASSWORD")
 
 
     db_connection = psycopg2.connect(
@@ -47,31 +48,31 @@ def vector_data_retrieval(query):
 
     output = collection.query(
         query_texts=[query],
-        n_results=2,
+        n_results=5,
         include=["metadatas"]
     )
     resulting_genres = []
     if output['metadatas'][0]:
         for i in output['metadatas'][0]:
             resulting_genres.append(i['genre'])
-    print("resulting genres = ",resulting_genres)
+    
     entire_data = []
     for genre in resulting_genres:
         cursor.execute(
-           f"select * from movie_information where genres like '%{genre}%' where ratings>=5 ORDER BY RANDOM() limit 15;"
+           f"select * from movie_information where genres like '%{genre}%' and ratings>=3 ORDER BY RANDOM() limit 50;"
         )
         data = cursor.fetchall()
-        certificate = data[0][0]
-        imdb_id = data[0][1]
-        overview = data[0][2]
-        release_date = data[0][3]
-        runtime = data[0][4]
-        title = data[0][5]
-        ratings = data[0][6]
-        genres = data[0][7]
-        available_languages = data[0][8]
-        cast_and_crew = data[0][9]
-        youtube_trailer_link = data[0][10]
+        certificate = str(data[0][0]) if data[0][0] else "False"
+        imdb_id = data[0][1] if data[0][1] else None
+        overview = data[0][2] if data[0][2] else None
+        release_date = data[0][3] if data[0][3] else None
+        runtime = data[0][4] if data[0][4] else None
+        title = data[0][5] if data[0][5] else None
+        ratings = data[0][6] if data[0][6] else None
+        genres = data[0][7] if data[0][7] else None
+        available_languages = data[0][8] if data[0][8] else None
+        cast_and_crew = data[0][9] if data[0][9] else None
+        youtube_trailer_link = data[0][10] if data[0][10] else None
         entire_data.append({
             'Certificate':certificate,
             'IMDB ID':imdb_id,
@@ -92,5 +93,5 @@ def vector_data_retrieval(query):
 
 if __name__ == "__main__":
     node_input = sys.argv[1]
-    print("Node input = ",node_input)
-    vector_data_retrieval(node_input)
+    movie_data = vector_data_retrieval(node_input)
+    print(json.dumps(movie_data,indent=4,default=str,sort_keys=True))

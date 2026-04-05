@@ -123,13 +123,13 @@ from dotenv import load_dotenv
 import json, sys,os
 
 
-load_dotenv("pg_admin4_connect_for_py.env")
+#load_dotenv("pg_admin4_connect_for_py.env")
 
-pg_host = os.getenv("HOST")
+pg_host = os.getenv("DB_HOST")
 pg_db_name = os.getenv("DB_NAME")
-pg_user = os.getenv("USER") 
-pg_port = os.getenv("PORT")
-pg_password = os.getenv("PASSWORD")
+pg_user = os.getenv("DB_USER") 
+pg_port = os.getenv("DB_PORT")
+pg_password = os.getenv("DB_PASSWORD")
 
 db_connection = psycopg2.connect(
     host=pg_host,

@@ -28,8 +28,11 @@ function TrendyMovies() {
             }
 
             const data = await response.json();
+            
+            
             //const keys = Object.keys(data); // column names
-
+            //const rowCount = data?.["Movie Name"].length || [];
+            //console.log("trendy movies and rowCount = ",data,rowCount);// this is a dictionary {"key1":[list of values],"key2":[list of values]..}
             // Convert each movie object to a structured object with readable keys
             const structured = data.map(movie => {
                 const row = {};
