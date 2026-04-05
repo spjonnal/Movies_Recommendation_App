@@ -218,6 +218,41 @@ async function typeHeadSearch(query) {
         
 }
 
+async function  InsertContributionData(movie_data) {
+    console.log("contribution data = ",movie_data);
+    try{
+        const status_code = await pg_pool.query(
+                            `
+                            INSERT INTO movie_information(
+                                adult_rated,
+                                release_date,
+                                runtime,
+                                title,
+                                ratings,
+                                genres,
+                                available_languages,
+                                cast_and_crew
+                            ) 
+                            VALUES ($1,$2,$3,$4,$5,$6,$7,$8);
+                            `,
+                            [
+                                movie_data['certificates'],
+                                movie_data['release_date'],
+                                movie_data['movie_duration'],
+                                movie_data['movie_name'],
+                                movie_data['imdb_rating'],
+                                movie_data['genres'],
+                                movie_data['dubbing'],
+                                movie_data['cast_and_crew']
+                            ]
+                            );
+        return status_code;
+    }
+    catch(err){
+        throw err;
+    }
+}
+
 function getFullMovie(db,movie_name){
     return new Promise((resolve, reject) => {
         db.all(
@@ -253,7 +288,7 @@ async function specificMovie(movie_name){
 
 module.exports={
     db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation, 
-    typeHeadSearch, specificMovie,getWebScrapedTrendyMovies
+    typeHeadSearch, specificMovie,getWebScrapedTrendyMovies,InsertContributionData
 }
 
 if (require.main === module) {
