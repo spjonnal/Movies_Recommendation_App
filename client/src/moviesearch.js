@@ -78,7 +78,7 @@ function MovieSearch(){
             const data = await response.json();
             
             setSuggestions(
-                (data.return_data && data.return_data.length>0)? data.return_data : [{Title:"Movie information not found..😰",Ratings:""}]
+                (data.return_data && data.return_data.length>0)? data.return_data : [{title:"Movie information not found..😰",ratings:""}]
             );
         } catch (err) {
             console.error("React fetch error:", err);
