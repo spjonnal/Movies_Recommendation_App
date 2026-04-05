@@ -214,9 +214,7 @@ async function typeHeadSearch(query) {
     catch(err){
         throw err;
     }
-    finally{
-        pg_pool.close();
-    }
+    
         
 }
 
