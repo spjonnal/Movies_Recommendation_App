@@ -201,7 +201,7 @@ async function getWebScrapedTrendyMovies() {
 
 async function typeHeadSearch(query) {
     try{
-        const respone = await pg_pool.query(
+        const response = await pg_pool.query(
             `
             select title, max(ratings) as ratings from movie_information where ratings >= 5 and title like $1
             group by title order by random() limit 25; 
