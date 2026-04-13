@@ -253,10 +253,6 @@ async function typeHeadSearch(query) {
 //     }
 // }
 async function  InsertContributionData(movie_data) {
-    
-    title = movie_data['movie_name'].toString().split(' ').join('');
-    youtube_trailer_link = "https://www.youtube.com/results?search_query="+title+"+offical+trailer"
-    
     try{
         const status_code = await pg_pool.query(
                             `
@@ -282,7 +278,7 @@ async function  InsertContributionData(movie_data) {
                                 movie_data['genres'],
                                 movie_data['dubbing'],
                                 movie_data['cast_and_crew'],
-                                youtube_trailer_link
+                                movie_date['youtube_trailer_link']
                             ]
                             );
         return status_code;
