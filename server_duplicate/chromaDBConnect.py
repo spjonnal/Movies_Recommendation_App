@@ -106,11 +106,11 @@ from functools import lru_cache
 #load_dotenv("pg_admin4_connect_for_py.env")
 
 db_connection = psycopg2.connect(
-    host=os.getenv("HOST"),
-    port=os.getenv("PORT"),
+    host=os.getenv("DB_HOST"),
+    port=os.getenv("DB_PORT"),
     database=os.getenv("DB_NAME"),
-    user=os.getenv("USER"),
-    password=os.getenv("PASSWORD"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
 )
 
 cursor = db_connection.cursor()
