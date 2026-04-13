@@ -218,8 +218,45 @@ async function typeHeadSearch(query) {
         
 }
 
+// async function  InsertContributionData(movie_data) {
+//     console.log("contribution data = ",movie_data);
+//     try{
+//         const status_code = await pg_pool.query(
+//                             `
+//                             INSERT INTO movie_information(
+//                                 adult_rated,
+//                                 release_date,
+//                                 runtime,
+//                                 title,
+//                                 ratings,
+//                                 genres,
+//                                 available_languages,
+//                                 cast_and_crew
+//                             ) 
+//                             VALUES ($1,$2,$3,$4,$5,$6,$7,$8);
+//                             `,
+//                             [
+//                                 movie_data['certificates'],
+//                                 movie_data['release_date'],
+//                                 movie_data['movie_duration'],
+//                                 movie_data['movie_name'],
+//                                 movie_data['imdb_rating'],
+//                                 movie_data['genres'],
+//                                 movie_data['dubbing'],
+//                                 movie_data['cast_and_crew']
+//                             ]
+//                             );
+//         return status_code;
+//     }
+//     catch(err){
+//         throw err;
+//     }
+// }
 async function  InsertContributionData(movie_data) {
-    console.log("contribution data = ",movie_data);
+    
+    title = movie_data['movie_name'].toString().split(' ').join('');
+    youtube_trailer_link = "https://www.youtube.com/results?search_query="+title+"+offical+trailer"
+    
     try{
         const status_code = await pg_pool.query(
                             `
@@ -231,9 +268,10 @@ async function  InsertContributionData(movie_data) {
                                 ratings,
                                 genres,
                                 available_languages,
-                                cast_and_crew
+                                cast_and_crew,
+                                youtube_trailer_link
                             ) 
-                            VALUES ($1,$2,$3,$4,$5,$6,$7,$8);
+                            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9);
                             `,
                             [
                                 movie_data['certificates'],
@@ -243,7 +281,8 @@ async function  InsertContributionData(movie_data) {
                                 movie_data['imdb_rating'],
                                 movie_data['genres'],
                                 movie_data['dubbing'],
-                                movie_data['cast_and_crew']
+                                movie_data['cast_and_crew'],
+                                youtube_trailer_link
                             ]
                             );
         return status_code;
@@ -277,7 +316,15 @@ async function specificMovie(movie_name){
             SELECT * FROM movie_information where title LIKE $1 LIMIT 1;
             `, [`%${movie_name.title}%`]
         )
-        
+        for(let i = 0; i <full_movie.rows.length;i++){
+            let r = full_movie.rows[i];
+            if(r['overview'] == null){
+                r['overview'] = 'Not Available';
+            }
+            if(r['youtube_trailer_link'] == null){
+                r['youtube_trailer_link'] = 'Not Available';
+            }
+        }
         return full_movie.rows;
     }
     catch(err){
