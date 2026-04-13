@@ -192,7 +192,7 @@ app.post('/api/send-contribution-data',async(req,res) =>{
     var date = contribution_data['release_date'];
     date = new Date(date).toISOString().split('T')[0];
     contribution_data['release_date'] = date;
-    var title = movie_data['movie_name'].toString().split(' ').join('');
+    var title = contribution_data['movie_name'].toString().split(' ').join('');
     var youtube_trailer_link = "https://www.youtube.com/results?search_query="+title+"+offical+trailer"
     contribution_data['youtube_trailer_link'] = youtube_trailer_link;
     const status_code = await InsertContributionData(contribution_data);
