@@ -278,7 +278,7 @@ async function  InsertContributionData(movie_data) {
                                 movie_data['genres'],
                                 movie_data['dubbing'],
                                 movie_data['cast_and_crew'],
-                                movie_date['youtube_trailer_link']
+                                movie_data['youtube_trailer_link']
                             ]
                             );
         return status_code;
