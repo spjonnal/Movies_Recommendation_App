@@ -76,7 +76,7 @@ function MovieSearch(){
             });
 
             const data = await response.json();
-            console.log("data for typehead in react = ",data.return_data);
+            
             setSuggestions(
                 (data.return_data && data.return_data.length>0)? data.return_data : [{title:"Movie information not found..😰",ratings:""}]
             );
