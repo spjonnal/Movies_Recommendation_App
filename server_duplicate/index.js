@@ -70,9 +70,16 @@ app.post('/api/send-genre',async (req,res)=>{
     const genre = req.body;//get the genre
     console.log("genre from node = ",genre);
     //const py_output = await executePython('count_vectorizer.py',[genre.inputText]); // send to python for execution
-    const py_output = await executePython('chromaDBConnect.py',[genre.inputText]);
-    const parsedOut = JSON.parse(py_output.toString()); // response
-    res.json({parsedOut});
+    //const py_output = await executePython('chromaDBConnect.py',[genre.inputText]);
+    const py_output = await axios.get(
+          "https://vector-db-search-api.onrender.com/movie_search",
+          {
+            params:{query:genre.inputText}
+          } 
+        );
+        //console.log("data for vector search = ",py_output);//executePython('chromaDBConnect.py',[genre.inputText]);
+        //const parsedOut = JSON.parse(py_output.toString()); // response
+        res.json(py_output.data);
     
     }
     catch(err){
