@@ -129,7 +129,7 @@ function MovieSearch(){
                 });
                 const data = await response.json();
                 
-                setResp(data.parsedOut);
+                setResp(data);
                 
             } catch (error) {
                 alert(error.toString());
