@@ -240,6 +240,8 @@ function MovieSearch(){
                                     <span>⭐ {movie.ratings}</span>
                                     <span>{movie.genres}</span>
                                     <span>{movie.runtime}</span>
+                                    <span>Certificate/Adult rated film?</span>
+                                    <span>{movie['Certificate']}</span>
                                     <span>{new Date(movie.release_date).toISOString().split('T')[0]}</span>
                                 </div>
                                 </div>
@@ -303,6 +305,8 @@ function MovieSearch(){
                                         <span>{movie['Ratings']}</span>
                                         <span>{movie['Genres']}</span>
                                         <span>{movie['Runtime']}</span>
+                                        <span>Certificate/Adult rated film?</span>
+                                        <span>{movie['Certificate']}</span>
                                         <span>{new Date(movie['Release Date']).toISOString().split('T')[0]}</span>
                                     </div>
                                     </div>
