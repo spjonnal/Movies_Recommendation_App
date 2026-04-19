@@ -125,12 +125,13 @@ async def vector_data_retrieval(query:str):
         placeholders = " OR ".join(["genres ILIKE %s"] * len(resulting_genres))
 
         sql_query = f"""
+        SELECT DISTINCT * FROM(
             SELECT 
                 *
             FROM movie_information
-            WHERE ratings >= 3
+            WHERE ratings >= 3.5
             AND ({placeholders})
-            LIMIT 50;
+            LIMIT 75) AS unique_movies;
         """
 
         params = [f"%{g}%" for g in resulting_genres]
