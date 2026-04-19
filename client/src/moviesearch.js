@@ -301,7 +301,7 @@ function MovieSearch(){
                                     <h2>{movie['Title']}</h2>
                                     <div className = "movie-meta">
                                         <span>{movie['Ratings']}</span>
-                                        <span>{movie['Gernes']}</span>
+                                        <span>{movie['Genres']}</span>
                                         <span>{movie['Runtime']}</span>
                                         <span>{new Date(movie['Release Date']).toISOString().split('T')[0]}</span>
                                     </div>
