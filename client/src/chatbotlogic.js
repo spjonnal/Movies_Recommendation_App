@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import './App.css'
 
 function Chatbotlogic(){
+    //const api_base = process.env.REACT_APP_MOWICKIE_BACKEND;
+    //const api_base = window.RUNTIME_CONFIG.API_BASE;
     const [query, setUserQuery] = useState("");
     const [isOpen, setIsOpen] = useState(false);
-    const api_base = process.env.REACT_APP_API_BASE;
     const [llmresponse,setLLMResponse] = useState([
         {from_user:"mowickie",text:"Hi, how can I help you today?"}
     ]);
@@ -18,9 +19,9 @@ function Chatbotlogic(){
 
     // Prepare conversation context for the backend
         const context = [...llmresponse.slice(-200), { from_user: "user", text: query }];
-
+        console.log("contect for llm = ",context);
         try {
-            const response_from_llm = await fetch(`${api_base}/api/ask_llm`, {
+            const response_from_llm = await fetch("http://localhost:4000/api/ask_llm", {//
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ conversation: context })

@@ -123,7 +123,7 @@ from dotenv import load_dotenv
 import json, sys,os
 
 
-#load_dotenv("pg_admin4_connect_for_py.env")
+load_dotenv("pg_admin4_connect_for_py.env")
 
 pg_host = os.getenv("DB_HOST")
 pg_db_name = os.getenv("DB_NAME")
@@ -189,11 +189,11 @@ with sync_playwright() as p:
                     "certificate": item.get("contentRating", "N/A"),
                 }
                 if movie_data['title'] not in existing_titles:
-                    print("came to enter movie name = ",type(movie_data['certificate']),type(movie_data['rating']))
+                    
                     cursor.execute(
                         """
                         INSERT INTO trending_movies (runtime, imdb_ratings,certificate,overview,imdb_url_page,
-                        genre,image_url,movie_name)
+                        genre,image_url,title)
                         VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
                         """,
                         (

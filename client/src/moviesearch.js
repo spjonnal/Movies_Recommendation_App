@@ -8,6 +8,10 @@ import './App.css'
 
 function MovieSearch(){
       // const [movie_genre, setMovieGenre] = useState('');
+    
+    //const api_base = process.env.REACT_APP_MOWICKIE_BACKEND;
+    //const api_base = window.RUNTIME_CONFIG.API_BASE;
+    //console.log("api backend = ", api_base);
     const [resp, setResp] = useState([]);
     const [selectedGenre, setSelectedGenre] = useState('');
     const [contribute, setContribute] = useState(false);
@@ -18,7 +22,6 @@ function MovieSearch(){
     const [closeTypeHeadDataInfo, setCloseTypeHeadDataInfo] = useState(false);
     const [typeHead, setTypeHead] = useState("");
     const [suggestions, setSuggestions] = useState([]);
-    //const api_base = process.env.REACT_APP_API_BASE;
     const [movie_info, setMovieInfo] = useState([]);
     const [postMovieData, setPostMovieData] = useState({
         movie_name: "",
@@ -69,14 +72,14 @@ function MovieSearch(){
         }
 
         try {
-            const response = await fetch("http://localhost:4001/api/typehead", {
+            const response = await fetch("http://localhost:4000/api/typehead",{//`${api_base}/api/typehead`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ inputText }),
             });
 
             const data = await response.json();
-            console.log("data for typehead in react = ",data.return_data);
+            
             setSuggestions(
                 (data.return_data && data.return_data.length>0)? data.return_data : [{title:"Movie information not found..😰",ratings:""}]
             );
@@ -90,7 +93,7 @@ function MovieSearch(){
         const selected_movie = title;
         
         try{
-            const movie_complete_info = await fetch("http://localhost:4001/api/movieinfo",{
+            const movie_complete_info = await fetch("http://localhost:4000/api/movieinfo",{
                 method :"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -118,7 +121,7 @@ function MovieSearch(){
         
             try {
                 setLoading(true);
-                const response = await fetch("http://localhost:4001/api/send-genre", {
+                const response = await fetch("http://localhost:4000/api/send-genre", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -129,7 +132,7 @@ function MovieSearch(){
                 });
                 const data = await response.json();
                 
-                setResp(data.parsedOut);
+                setResp(data);
                 
             } catch (error) {
                 alert(error.toString());
@@ -150,14 +153,14 @@ function MovieSearch(){
             
             
         
-            const send_contribution_data = await fetch("http://localhost:4001/api/send-contribution-data",{
+            const send_contribution_data = await fetch("http://localhost:4000/api/send-contribution-data",{
                 method:"POST",
                 headers:{
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(postMovieData )
             })
-              
+            
             const data = await send_contribution_data.json();
             
             if(data.success){
@@ -165,7 +168,7 @@ function MovieSearch(){
             }
         }
         catch(error){
-            console.log("some error while storing your information",error.toString());
+            console.error("some error while storing your information",error.toString());
     
         }
     
@@ -227,6 +230,7 @@ function MovieSearch(){
                     <button id = "submit_button" type='submit'>Submit</button>
                 </form>
                 {movie_info.complete_movie_info && movie_info.complete_movie_info.length > 0 && !closeDataInfo && (
+                    
                     <>
                         <button type="button" id="cancel_movie_data" onClick={handleSetCloseMovieInfo}>X</button>
                         {movie_info?.complete_movie_info?.map((movie, index) => (
@@ -238,8 +242,10 @@ function MovieSearch(){
 
                                 <div className="movie-meta">
                                     <span>⭐ {movie.ratings}</span>
-                                    <span>{movie.genres}</span>
+                                    <span>{movie['Genres']}</span>
                                     <span>{movie.runtime}</span>
+                                    <span>Certificate/Adult rated film?</span>
+                                    <span>{movie.adult_rated === false?'False':'True'}</span>
                                     <span>{new Date(movie.release_date).toISOString().split('T')[0]}</span>
                                 </div>
                                 </div>
@@ -301,8 +307,10 @@ function MovieSearch(){
                                     <h2>{movie['Title']}</h2>
                                     <div className = "movie-meta">
                                         <span>{movie['Ratings']}</span>
-                                        <span>{movie['Gernes']}</span>
+                                        <span>{movie['Genres']}</span>
                                         <span>{movie['Runtime']}</span>
+                                        <span>Certificate/Adult rated film?</span>
+                                        <span>{movie.adult_rated === false?'False':'True'}</span>
                                         <span>{new Date(movie['Release Date']).toISOString().split('T')[0]}</span>
                                     </div>
                                     </div>
@@ -311,7 +319,7 @@ function MovieSearch(){
                                         <span>{movie['Overview']}</span>
                                         <h3>Cast and Crew</h3>
                                         <span>{movie['Cast and Crew']}</span>
-                                        <a href = {movie['Youtube Trailer Link']} target = "_blank" without rel="noreferrer">Watch on YouTube</a>
+                                        <a href = {movie['Youtube Trailer Link']} target = "_blank"  rel="noreferrer">Watch on YouTube</a>
                                     </div>
                                 </div>
                                 

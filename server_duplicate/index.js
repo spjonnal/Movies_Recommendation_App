@@ -11,6 +11,7 @@ import fs from "fs";
 import fast_csv from "fast-csv";
 import {CloudClient} from "chromadb";
 import OPENAI from "openai";
+
 import axios from "axios";
 //const {spawn} = require("child_process");
 
@@ -23,6 +24,8 @@ import axios from "axios";
 
 // const CloudClient  = require('chromaDB')
 // const OPENAI = require('openai');
+
+
 
 import {db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation,
   typeHeadSearch, specificMovie,getWebScrapedTrendyMovies
@@ -179,7 +182,8 @@ app.post("/api/ask_llm", async (req, res) => {
     
     
     const response = await axios.post(
-      "https://mowickie-rag-service.onrender.com/ask_llm",
+      //"https://mowickie-rag-service.onrender.com/ask_llm",
+      
        {conversation: req.body.conversation},
       { headers: { "Content-Type": "application/json" } }
     );
