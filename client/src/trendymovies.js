@@ -4,8 +4,12 @@ import word_cloud from './word_cloud_for_trending_movies.jpg'
 function TrendyMovies() {
     const [resp, setResp] = useState([]);
     const [loading , setLoading] = useState(false);
+<<<<<<< HEAD
     //const api_base = process.env.REACT_APP_MOWICKIE_BACKEND;
     //const api_base = window.RUNTIME_CONFIG.API_BASE;
+=======
+    const api_base = process.env.REACT_APP_API_BASE;
+>>>>>>> 3a324cbe61d0bcd0b315743ffc49d6d833f10577
     // Utility function to format column names
     const formatColumnName = (name) => {
     return name
@@ -19,7 +23,11 @@ function TrendyMovies() {
         event.preventDefault();
        try {
             setLoading(true);
+<<<<<<< HEAD
             const response = await fetch("http://localhost:4000/api/send-trendy-movies", {
+=======
+            const response = await fetch(`${api_base}/api/send-trendy-movies`, {
+>>>>>>> 3a324cbe61d0bcd0b315743ffc49d6d833f10577
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
             });

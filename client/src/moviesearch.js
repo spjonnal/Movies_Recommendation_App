@@ -22,6 +22,10 @@ function MovieSearch(){
     const [closeTypeHeadDataInfo, setCloseTypeHeadDataInfo] = useState(false);
     const [typeHead, setTypeHead] = useState("");
     const [suggestions, setSuggestions] = useState([]);
+<<<<<<< HEAD
+=======
+    const api_base = process.env.REACT_APP_API_BASE;
+>>>>>>> 3a324cbe61d0bcd0b315743ffc49d6d833f10577
     const [movie_info, setMovieInfo] = useState([]);
     const [postMovieData, setPostMovieData] = useState({
         movie_name: "",
@@ -72,7 +76,11 @@ function MovieSearch(){
         }
 
         try {
+<<<<<<< HEAD
             const response = await fetch("http://localhost:4000/api/typehead",{//`${api_base}/api/typehead`, {
+=======
+            const response = await fetch(`${api_base}/api/typehead`, {
+>>>>>>> 3a324cbe61d0bcd0b315743ffc49d6d833f10577
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ inputText }),
@@ -93,7 +101,11 @@ function MovieSearch(){
         const selected_movie = title;
         
         try{
+<<<<<<< HEAD
             const movie_complete_info = await fetch("http://localhost:4000/api/movieinfo",{
+=======
+            const movie_complete_info = await fetch(`${api_base}/api/movieinfo`,{
+>>>>>>> 3a324cbe61d0bcd0b315743ffc49d6d833f10577
                 method :"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -121,7 +133,11 @@ function MovieSearch(){
         
             try {
                 setLoading(true);
+<<<<<<< HEAD
                 const response = await fetch("http://localhost:4000/api/send-genre", {
+=======
+                const response = await fetch(`${api_base}/api/send-genre`, {
+>>>>>>> 3a324cbe61d0bcd0b315743ffc49d6d833f10577
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -153,7 +169,11 @@ function MovieSearch(){
             
             
         
+<<<<<<< HEAD
             const send_contribution_data = await fetch("http://localhost:4000/api/send-contribution-data",{
+=======
+            const send_contribution_data = await fetch(`${api_base}/api/send-contribution-data`,{
+>>>>>>> 3a324cbe61d0bcd0b315743ffc49d6d833f10577
                 method:"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -245,7 +265,11 @@ function MovieSearch(){
                                     <span>{movie['Genres']}</span>
                                     <span>{movie.runtime}</span>
                                     <span>Certificate/Adult rated film?</span>
+<<<<<<< HEAD
                                     <span>{movie.adult_rated === false?'False':'True'}</span>
+=======
+                                    <span>{movie.adult_rated == false?'False':'True'}</span>
+>>>>>>> 3a324cbe61d0bcd0b315743ffc49d6d833f10577
                                     <span>{new Date(movie.release_date).toISOString().split('T')[0]}</span>
                                 </div>
                                 </div>
@@ -310,7 +334,11 @@ function MovieSearch(){
                                         <span>{movie['Genres']}</span>
                                         <span>{movie['Runtime']}</span>
                                         <span>Certificate/Adult rated film?</span>
+<<<<<<< HEAD
                                         <span>{movie.adult_rated === false?'False':'True'}</span>
+=======
+                                        <span>{movie.adult_rated == false?'False':'True'}</span>
+>>>>>>> 3a324cbe61d0bcd0b315743ffc49d6d833f10577
                                         <span>{new Date(movie['Release Date']).toISOString().split('T')[0]}</span>
                                     </div>
                                     </div>

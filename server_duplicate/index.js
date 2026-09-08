@@ -28,7 +28,7 @@ import axios from "axios";
 
 
 import {db_connection,movie_recom_table_create,InsertIntoDB,getCount,dropTable,dataCheck,tableCheck,getInformation,
-  typeHeadSearch, specificMovie,getWebScrapedTrendyMovies
+  typeHeadSearch, specificMovie,getWebScrapedTrendyMovies,InsertContributionData
 } from './db_file.cjs';
 import { type } from "os";
 
@@ -73,9 +73,16 @@ app.post('/api/send-genre',async (req,res)=>{
     const genre = req.body;//get the genre
     console.log("genre from node = ",genre);
     //const py_output = await executePython('count_vectorizer.py',[genre.inputText]); // send to python for execution
-    const py_output = await executePython('chromaDBConnect.py',[genre.inputText]);
-    const parsedOut = JSON.parse(py_output.toString()); // response
-    res.json({parsedOut});
+    //const py_output = await executePython('chromaDBConnect.py',[genre.inputText]);
+    const py_output = await axios.get(
+          "https://vector-db-search-api.onrender.com/movie_search",
+          {
+            params:{query:genre.inputText}
+          } 
+        );
+        //console.log("data for vector search = ",py_output);//executePython('chromaDBConnect.py',[genre.inputText]);
+        //const parsedOut = JSON.parse(py_output.toString()); // response
+        res.json(py_output.data);
     
     }
     catch(err){
@@ -174,6 +181,46 @@ app.post('/api/send-trendy-movies', async (req, res) => {
     console.error("error in web scraping = ",err.error);
   }
 });
+
+app.post('/api/send-contribution-data',async(req,res) =>{
+  try{
+    const contribution_data = req.body;
+    var certificate = contribution_data['certificates']
+    if(certificate == 'U' || certificate == 'U/A' || certificate == 'PG' || certificate == 'PG-13'){
+      contribution_data['certificates'] = false;
+    }
+    else{
+      contribution_data['certificates'] = true;
+    }
+    var time = contribution_data['movie_duration'].toString();
+    
+    var final_time = '';
+    var hours = Math.floor(time/60);
+    var minutes = time%60;
+    final_time = String(hours)+'h '+String(minutes)+'m'
+    contribution_data['movie_duration'] = final_time;
+    var date = contribution_data['release_date'];
+    date = new Date(date).toISOString().split('T')[0];
+    contribution_data['release_date'] = date;
+    var title = contribution_data['movie_name'].toString().split(' ').join('');
+    var youtube_trailer_link = "https://www.youtube.com/results?search_query="+title+"+offical+trailer"
+    contribution_data['youtube_trailer_link'] = youtube_trailer_link;
+    const status_code = await InsertContributionData(contribution_data);
+    
+    
+    res.status(201).json({
+            success: true,
+            rowCount: status_code.rowCount
+    });
+  }
+  catch(err){
+    throw err;
+    res.status(500).json({
+            success: false,
+            rowCount: 0
+    });
+  }
+})
 
 
 app.post("/api/ask_llm", async (req, res) => {
